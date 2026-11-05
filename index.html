@@ -28,7 +28,7 @@
     color:var(--ink);
     font-family:'IBM Plex Sans', sans-serif;
     -webkit-font-smoothing:antialiased;
-    padding:32px 20px 64px;
+    padding:32px 16px 64px;
   }
   .wrap{max-width:1100px;margin:0 auto;}
 
@@ -42,7 +42,6 @@
   }
   h1 em{ font-style:italic; font-weight:400; color:var(--teal); }
   .lede{ max-width:660px; color:var(--ink-soft); font-size:15.5px; line-height:1.55; margin:0 0 6px; }
-  .lede a{ color:var(--ink); }
   .disclaimer{
     margin-top:18px; padding:12px 16px; background:var(--paper-raised);
     border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:2px;
@@ -50,35 +49,99 @@
   }
   .disclaimer strong{ color:var(--ink); }
 
-  .section-title{
-    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em;
-    text-transform:uppercase; color:var(--ink-soft); margin:44px 0 16px;
-    display:flex; align-items:center; gap:10px;
+  /* ---------- Étapes ---------- */
+  .step{ margin-top:48px; }
+  .step-head{ display:flex; gap:14px; align-items:flex-start; margin-bottom:16px; }
+  .step-num{
+    flex:none; width:32px; height:32px; border-radius:50%; background:var(--ink); color:var(--paper);
+    font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:14px;
+    display:flex; align-items:center; justify-content:center; margin-top:2px;
   }
-  .section-title::after{ content:""; flex:1; height:1px; background:var(--line); }
+  .step-head h2{
+    font-family:'Fraunces', serif; font-weight:500; font-size:clamp(20px,2.6vw,26px);
+    line-height:1.2; margin:0 0 4px;
+  }
+  .step-head p{ margin:0; font-size:14px; color:var(--ink-soft); line-height:1.5; max-width:680px; }
 
-  /* ---------- HERO : la réglette ---------- */
-  .hero{
-    margin-top:28px; background:var(--paper-raised); border:1px solid var(--line);
-    border-radius:6px; padding:30px 30px 28px;
+  .card{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:6px; padding:24px;
   }
-  .hero-q{
-    font-family:'Fraunces', serif; font-weight:500; font-size:clamp(19px,2.6vw,25px);
-    line-height:1.25; margin:0 0 4px;
+  @media (max-width:560px){ .card{ padding:18px 16px; } }
+
+  .fields{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:20px 28px;
   }
-  .hero-sub{ font-size:13.5px; color:var(--ink-soft); margin:0 0 22px; }
-  .boost-readout{
-    display:flex; align-items:baseline; gap:14px; margin-bottom:4px; flex-wrap:wrap;
+  .grp-title{
+    grid-column:1/-1; font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--ink-soft); margin-top:4px;
   }
+  .grp-title.f{ color:var(--gold); }
+  .field label{ display:block; font-size:13px; font-weight:500; margin-bottom:8px; }
+  .field .value{ font-family:'IBM Plex Mono', monospace; color:var(--teal); font-weight:600; margin-left:4px; }
+  .field.gold .value{ color:var(--gold); }
+  input[type=range]{ width:100%; accent-color:var(--teal); height:20px; cursor:pointer; margin:0; }
+  .field.gold input[type=range]{ accent-color:var(--gold); }
+  input[type=range]:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+
+  .readout{
+    margin-top:22px; padding-top:18px; border-top:1px solid var(--line);
+    display:flex; flex-wrap:wrap; gap:6px 18px; align-items:baseline;
+  }
+  .readout .lbl{ font-size:13.5px; color:var(--ink-soft); }
+  .readout .big{ font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:clamp(22px,3vw,28px); }
+  .readout .sub{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--teal); }
+
+  /* ---------- Étape 2 : comparatif d'achats ---------- */
+  .buy{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:760px){ .buy{ grid-template-columns:1fr; } }
+  .buy-row{ border:1px solid var(--line); border-radius:4px; padding:18px; background:var(--paper); }
+  .buy-row h3{ margin:0 0 14px; font-size:15px; font-weight:600; }
+  .buy-row .field + .field{ margin-top:16px; }
+  .buy-gap{
+    margin-top:16px; padding-top:12px; border-top:1px dashed var(--line-strong);
+    font-size:13px; color:var(--ink-soft); line-height:1.5;
+  }
+  .buy-gap strong{ font-family:'IBM Plex Mono', monospace; color:var(--ink); }
+  .saving{
+    margin-top:20px; padding:20px 22px; border-radius:4px; background:var(--good); color:#fff;
+    display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:6px 20px;
+  }
+  .saving .lbl{ font-size:14px; opacity:0.9; }
+  .saving .big{ font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:clamp(28px,5vw,40px); }
+  .saving.neg{ background:var(--bad); }
+
+  /* ---------- Étape 3 : bilan à CA égal ---------- */
+  .ledger{ margin-top:24px; border-top:1px solid var(--line); padding-top:8px; }
+  .line-item{
+    display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+    padding:9px 0; border-bottom:1px solid var(--line); font-size:14px;
+  }
+  .line-item .lbl{ color:var(--ink-soft); }
+  .line-item .val{ font-family:'IBM Plex Mono', monospace; font-weight:500; white-space:nowrap; }
+  .line-item .val.pos{ color:var(--good); }
+  .line-item .val.neg{ color:var(--bad); }
+  .line-item.sub .val{ color:var(--ink-soft); font-weight:400; }
+  .line-item.result{ border-bottom:none; border-top:2px solid var(--ink); margin-top:6px; padding-top:14px; }
+  .line-item.result .lbl{ color:var(--ink); font-weight:500; }
+  .line-item.result .val{ font-size:19px; font-weight:600; }
+  .line-item.rate .val{ color:var(--teal); }
+
+  .verdict{
+    margin-top:18px; padding:14px 18px; border-radius:4px; font-size:14.5px; line-height:1.5;
+    border-left:4px solid var(--ink-soft); background:var(--paper);
+  }
+  .verdict strong{ font-family:'IBM Plex Mono', monospace; }
+  .verdict.ok{ border-left-color:var(--good); }
+  .verdict.ko{ border-left-color:var(--bad); }
+
+  /* ---------- Étape 4 : la réglette ---------- */
+  .boost-readout{ display:flex; align-items:baseline; gap:14px; margin-bottom:4px; flex-wrap:wrap; }
   .boost-big{
     font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:clamp(44px,8vw,68px);
     line-height:1; letter-spacing:-0.02em;
   }
   .boost-big small{ font-size:0.45em; font-weight:500; color:var(--ink-soft); margin-left:4px; }
   .boost-ca{ font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--ink-soft); }
-
-  input[type=range]{ width:100%; accent-color:var(--ink); height:20px; cursor:pointer; }
-  input[type=range]:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
 
   input.boost{
     -webkit-appearance:none; appearance:none; width:100%; height:48px;
@@ -108,22 +171,16 @@
   .ticks{ position:relative; height:22px; margin-top:-2px; }
   .tick{
     position:absolute; transform:translateX(-50%); font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px; color:var(--ink-soft);
+    font-size:11.5px; color:var(--ink-soft); white-space:nowrap;
   }
-  .legend-zones{
-    display:flex; gap:18px; flex-wrap:wrap; margin-top:10px; font-size:12px; color:var(--ink-soft);
-  }
+  .legend-zones{ display:flex; gap:18px; flex-wrap:wrap; margin-top:10px; font-size:12px; color:var(--ink-soft); }
   .legend-zones i{ display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
   .legend-zones .r{ background:rgba(180,71,42,0.45); }
   .legend-zones .g{ background:rgba(44,122,75,0.5); }
 
-  .results{
-    display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin-top:26px;
-  }
+  .results{ display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:stretch; margin-top:26px; }
   @media (max-width:760px){ .results{ grid-template-columns:1fr; } }
-  .rcard{
-    border:1px solid var(--line); border-radius:4px; padding:18px 20px; background:var(--paper);
-  }
+  .rcard{ border:1px solid var(--line); border-radius:4px; padding:18px 20px; background:var(--paper); }
   .rcard.f{ background:var(--gold-dim); border-color:rgba(168,121,31,0.3); }
   .rcard .tag{
     font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.1em;
@@ -148,76 +205,26 @@
   .delta-badge.positive{ background:var(--good); }
   .delta-badge.negative{ background:var(--bad); }
 
-  .verdict{
-    margin-top:20px; padding:14px 18px; border-radius:4px; font-size:14.5px; line-height:1.5;
-    border-left:4px solid var(--ink-soft); background:var(--paper);
+  .chart-wrap{ margin-top:26px; padding-top:20px; border-top:1px solid var(--line); }
+  .chart-title{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--ink-soft); margin:0 0 10px;
   }
-  .verdict strong{ font-family:'IBM Plex Mono', monospace; }
-  .verdict.ok{ border-left-color:var(--good); }
-  .verdict.ko{ border-left-color:var(--bad); }
-
-  /* ---------- Chart ---------- */
-  .chart-card{
-    background:var(--paper-raised); border:1px solid var(--line); border-radius:4px;
-    padding:22px 22px 18px;
-  }
-  .chart-card svg{ width:100%; height:auto; display:block; }
+  .chart-wrap svg{ width:100%; height:auto; display:block; }
   .chart-legend{ display:flex; gap:22px; flex-wrap:wrap; margin-top:12px; font-size:12.5px; color:var(--ink-soft); }
   .chart-legend span{ display:inline-flex; align-items:center; gap:7px; }
   .chart-legend .sw{ width:18px; height:4px; border-radius:2px; display:inline-block; }
   .chart-legend .sw.i{ background:var(--teal); }
   .chart-legend .sw.f{ background:var(--gold); }
-  .chart-note{ font-size:12.5px; color:var(--ink-soft); line-height:1.55; margin:12px 0 0; }
 
-  /* ---------- P&L ---------- */
+  /* ---------- Étape 5 : P&L ---------- */
   .pl{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
   @media (max-width:760px){ .pl{ grid-template-columns:1fr; } }
   .col{ background:var(--paper-raised); border:1px solid var(--line); border-radius:4px; padding:24px 24px 26px; }
-  .col h2{ font-family:'Fraunces', serif; font-weight:500; font-size:20px; margin:0 0 16px; }
-  .col.f h2{ color:var(--gold); }
-  .line-item{
-    display:flex; justify-content:space-between; align-items:baseline; gap:12px;
-    padding:9px 0; border-bottom:1px solid var(--line); font-size:14px;
-  }
-  .line-item .lbl{ color:var(--ink-soft); }
-  .line-item .val{ font-family:'IBM Plex Mono', monospace; font-weight:500; white-space:nowrap; }
-  .line-item.sub .val{ color:var(--ink-soft); font-weight:400; }
-  .line-item.result{ border-bottom:none; border-top:2px solid var(--ink); margin-top:6px; padding-top:14px; }
-  .line-item.result .lbl{ color:var(--ink); font-weight:500; }
-  .line-item.result .val{ font-size:19px; font-weight:600; }
-  .line-item.rate .val{ color:var(--teal); }
+  @media (max-width:560px){ .col{ padding:18px 16px; } }
+  .col h3{ font-family:'Fraunces', serif; font-weight:500; font-size:20px; margin:0 0 16px; }
+  .col.f h3{ color:var(--gold); }
   .col.f .line-item.rate .val{ color:var(--gold); }
-
-  /* ---------- Hypothèses ---------- */
-  details.hyp{
-    background:var(--paper-raised); border:1px solid var(--line); border-radius:4px; margin-bottom:14px;
-  }
-  details.hyp summary{
-    cursor:pointer; padding:16px 22px; font-weight:500; font-size:14.5px; list-style:none;
-    display:flex; justify-content:space-between; align-items:center; gap:10px;
-  }
-  details.hyp summary::-webkit-details-marker{ display:none; }
-  details.hyp summary::after{ content:"+"; font-family:'IBM Plex Mono', monospace; font-size:18px; color:var(--ink-soft); }
-  details.hyp[open] summary::after{ content:"−"; }
-  details.hyp summary small{ color:var(--ink-soft); font-weight:400; font-size:12.5px; margin-left:8px; }
-  .hyp-body{
-    padding:6px 22px 24px; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-    gap:20px 28px;
-  }
-  .hyp-body .grp-title{
-    grid-column:1/-1; font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.1em;
-    text-transform:uppercase; color:var(--ink-soft); margin-top:6px;
-  }
-  .hyp-body .grp-title.f{ color:var(--gold); }
-  .field label{ display:block; font-size:13px; font-weight:500; margin-bottom:8px; }
-  .field .value{ font-family:'IBM Plex Mono', monospace; color:var(--teal); font-weight:600; margin-left:4px; }
-  .field.gold .value{ color:var(--gold); }
-  .field.gold input[type=range]{ accent-color:var(--gold); }
-  .saving-note{
-    grid-column:1/-1; padding:10px 12px; background:var(--teal-dim); border-radius:3px;
-    font-size:12.5px; color:var(--ink-soft);
-  }
-  .saving-note strong{ color:var(--teal); font-family:'IBM Plex Mono', monospace; }
 
   .foot-note{ margin-top:22px; font-size:12.5px; color:var(--ink-soft); line-height:1.6; }
 </style>
@@ -227,179 +234,236 @@
 
   <div class="eyebrow">GAVOILLE OPTICIENS — outil interne</div>
   <h1>Indépendant <em>ou</em> franchisé.<br>Lequel voyez-vous le mieux ?</h1>
-  <p class="lede">Une seule réglette : de combien le chiffre d'affaires progresse-t-il en rejoignant le réseau (150 marques, stock profond, meilleur tarif d'achat) ? Le résultat net se recalcule en direct, et l'outil dit à partir de quel niveau le franchisé passe devant. <a href="#hypotheses">Régler les hypothèses ↓</a></p>
+  <p class="lede">En cinq étapes : votre magasin tel qu'il est, ce que vous payez vos montures et vos verres, ce que coûte le réseau en face, puis ce que change une hausse de chiffre d'affaires. Tout se recalcule en direct.</p>
   <div class="disclaimer">
-    <strong>À lire avant utilisation.</strong> Les prix d'achat, la redevance et la cotisation réseau saisis par défaut sont des ordres de grandeur, pas les conditions réelles de GAVOILLE. Remplacez-les (section « Hypothèses » en bas de page) par vos vrais chiffres. La réglette de CA, elle, reste une hypothèse à confirmer par des mesures terrain.
+    <strong>À lire avant utilisation.</strong> Les prix d'achat, la redevance et la cotisation réseau saisis par défaut sont des ordres de grandeur, pas les conditions réelles de GAVOILLE. Remplacez-les par vos vrais chiffres. La hausse de chiffre d'affaires de l'étape 4 reste une hypothèse à confirmer par des mesures terrain.
   </div>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero" aria-label="Réglette de hausse du chiffre d'affaires">
-    <p class="hero-q">Si le chiffre d'affaires progresse de…</p>
-    <p class="hero-sub">Faites glisser pour tester différents scénarios de 1 % à 20 %.</p>
-
-    <div class="boost-readout">
-      <div class="boost-big"><span id="boost-val">8</span><small>% de CA</small></div>
-      <div class="boost-ca" id="boost-ca"></div>
-    </div>
-
-    <input type="range" class="boost" id="boost" min="1" max="20" step="0.5" value="8" aria-label="Hausse du chiffre d'affaires en pourcentage">
-    <div class="ticks" id="ticks"></div>
-    <div class="legend-zones">
-      <span><i class="r"></i>Le franchisé est derrière l'indépendant</span>
-      <span><i class="g"></i>Le franchisé est devant</span>
-    </div>
-
-    <div class="results">
-      <div class="rcard i">
-        <div class="tag">Indépendant — résultat net / an</div>
-        <div class="amount" id="r-i-amt"></div>
-        <div class="rate" id="r-i-rate"></div>
-      </div>
-      <div class="delta-badge" id="delta-badge">
-        <div class="d-eyebrow">écart annuel</div>
-        <div class="d-value" id="delta-value">—</div>
-      </div>
-      <div class="rcard f">
-        <div class="tag">Franchisé GAVOILLE — résultat net / an</div>
-        <div class="amount" id="r-f-amt"></div>
-        <div class="rate" id="r-f-rate"></div>
+  <!-- ===== ÉTAPE 1 ===== -->
+  <section class="step" aria-labelledby="s1-title">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div>
+        <h2 id="s1-title">Votre magasin aujourd'hui</h2>
+        <p>Les chiffres de votre point de vente en indépendant. Ils servent de base aux deux scénarios.</p>
       </div>
     </div>
-
-    <div class="verdict" id="verdict"></div>
+    <div class="card">
+      <div class="fields">
+        <div class="field">
+          <label for="ca">Chiffre d'affaires annuel <span class="value" id="v-ca"></span></label>
+          <input type="range" id="ca" min="200000" max="900000" step="10000" value="450000">
+        </div>
+        <div class="field">
+          <label for="charges">Charges fixes (loyer, salaires, énergie…) <span class="value" id="v-charges"></span></label>
+          <input type="range" id="charges" min="80000" max="320000" step="5000" value="200000">
+        </div>
+        <div class="field">
+          <label for="volmont">Montures vendues / an <span class="value" id="v-volmont"></span></label>
+          <input type="range" id="volmont" min="300" max="3000" step="50" value="1100">
+        </div>
+        <div class="field">
+          <label for="volverre">Paires de verres vendues / an <span class="value" id="v-volverre"></span></label>
+          <input type="range" id="volverre" min="300" max="3000" step="50" value="1100">
+        </div>
+        <div class="field">
+          <label for="autres">Autres achats (LAC, accessoires, % du CA) <span class="value" id="v-autres"></span></label>
+          <input type="range" id="autres" min="0" max="20" step="1" value="10">
+        </div>
+        <div class="field">
+          <label for="mkt">Marketing propre / an <span class="value" id="v-mkt"></span></label>
+          <input type="range" id="mkt" min="0" max="25000" step="500" value="8000">
+        </div>
+        <div class="field">
+          <label for="logiciel">Logiciel, gestion, formation / an <span class="value" id="v-logiciel"></span></label>
+          <input type="range" id="logiciel" min="0" max="15000" step="500" value="6000">
+        </div>
+      </div>
+      <div class="readout">
+        <span class="lbl">Votre résultat net actuel</span>
+        <span class="big" id="s1-res"></span>
+        <span class="sub" id="s1-rate"></span>
+      </div>
+    </div>
   </section>
 
-  <!-- ===== CHART ===== -->
-  <div class="section-title">Résultat net selon la hausse de CA</div>
-  <div class="chart-card">
-    <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Courbe du résultat net du franchisé selon la hausse de chiffre d'affaires, comparée à celui de l'indépendant"></svg>
-    <div class="chart-legend">
-      <span><i class="sw i"></i>Indépendant (inchangé)</span>
-      <span><i class="sw f"></i>Franchisé GAVOILLE</span>
-      <span>◯ Seuil où les deux se rejoignent</span>
-    </div>
-    <p class="chart-note">Le résultat de l'indépendant est constant ; celui du franchisé monte avec le CA car chaque euro supplémentaire dégage de la marge après achats et redevance. La pente de la courbe dépend surtout du tarif d'achat et du taux de redevance.</p>
-  </div>
-
-  <!-- ===== P&L ===== -->
-  <div class="section-title">Compte de résultat simplifié au niveau choisi</div>
-  <div class="pl">
-    <div class="col i">
-      <h2>Indépendant</h2>
-      <div class="line-item"><span class="lbl">Chiffre d'affaires</span><span class="val" id="i-ca"></span></div>
-      <div class="line-item sub"><span class="lbl" id="i-lbl-m">− Achat montures</span><span class="val" id="i-cm"></span></div>
-      <div class="line-item sub"><span class="lbl" id="i-lbl-v">− Achat verres</span><span class="val" id="i-cv"></span></div>
-      <div class="line-item sub"><span class="lbl">− Autres achats</span><span class="val" id="i-aut"></span></div>
-      <div class="line-item"><span class="lbl">Marge brute</span><span class="val" id="i-marge"></span></div>
-      <div class="line-item sub"><span class="lbl">− Charges fixes</span><span class="val" id="i-charges"></span></div>
-      <div class="line-item sub"><span class="lbl">− Marketing propre</span><span class="val" id="i-mkt"></span></div>
-      <div class="line-item sub"><span class="lbl">− Logiciel / gestion</span><span class="val" id="i-log"></span></div>
-      <div class="line-item result"><span class="lbl">Résultat net</span><span class="val" id="i-res"></span></div>
-      <div class="line-item rate"><span class="lbl">Taux de rentabilité</span><span class="val" id="i-taux"></span></div>
-    </div>
-    <div class="col f">
-      <h2>Franchisé GAVOILLE</h2>
-      <div class="line-item"><span class="lbl">Chiffre d'affaires</span><span class="val" id="f-ca"></span></div>
-      <div class="line-item sub"><span class="lbl" id="f-lbl-m">− Achat montures (centrale)</span><span class="val" id="f-cm"></span></div>
-      <div class="line-item sub"><span class="lbl" id="f-lbl-v">− Achat verres (centrale)</span><span class="val" id="f-cv"></span></div>
-      <div class="line-item sub"><span class="lbl">− Autres achats</span><span class="val" id="f-aut"></span></div>
-      <div class="line-item"><span class="lbl">Marge brute</span><span class="val" id="f-marge"></span></div>
-      <div class="line-item sub"><span class="lbl">− Charges fixes</span><span class="val" id="f-charges"></span></div>
-      <div class="line-item sub"><span class="lbl">− Marketing propre restant</span><span class="val" id="f-mkt"></span></div>
-      <div class="line-item sub"><span class="lbl">− Logiciel / gestion</span><span class="val" id="f-log"></span></div>
-      <div class="line-item sub"><span class="lbl">− Redevance + cotisation réseau</span><span class="val" id="f-red"></span></div>
-      <div class="line-item sub"><span class="lbl">− Coût du stock étendu</span><span class="val" id="f-stock"></span></div>
-      <div class="line-item result"><span class="lbl">Résultat net</span><span class="val" id="f-res"></span></div>
-      <div class="line-item rate"><span class="lbl">Taux de rentabilité</span><span class="val" id="f-taux"></span></div>
-    </div>
-  </div>
-
-  <!-- ===== HYPOTHESES ===== -->
-  <div class="section-title" id="hypotheses">Hypothèses — à remplacer par vos chiffres réels</div>
-
-  <details class="hyp" open>
-    <summary><span>Point de vente <small>données communes aux deux scénarios</small></span></summary>
-    <div class="hyp-body">
-      <div class="field">
-        <label>Chiffre d'affaires actuel <span class="value" id="v-ca"></span></label>
-        <input type="range" id="ca" min="200000" max="900000" step="10000" value="450000">
-      </div>
-      <div class="field">
-        <label>Charges fixes (loyer, salaires, énergie…) <span class="value" id="v-charges"></span></label>
-        <input type="range" id="charges" min="80000" max="320000" step="5000" value="200000">
-      </div>
-      <div class="field">
-        <label>Autres achats (LAC, accessoires, % du CA) <span class="value" id="v-autres"></span></label>
-        <input type="range" id="autres" min="0" max="20" step="1" value="10">
-      </div>
-      <div class="field">
-        <label>Marketing propre <span class="value" id="v-mkt"></span></label>
-        <input type="range" id="mkt" min="0" max="25000" step="500" value="8000">
-      </div>
-      <div class="field">
-        <label>Logiciel, gestion, formation <span class="value" id="v-logiciel"></span></label>
-        <input type="range" id="logiciel" min="0" max="15000" step="500" value="6000">
+  <!-- ===== ÉTAPE 2 ===== -->
+  <section class="step" aria-labelledby="s2-title">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div>
+        <h2 id="s2-title">Ce que vous payez, ce que vous paieriez chez GAVOILLE</h2>
+        <p>Le prix d'achat moyen de vos montures et de vos verres aujourd'hui, face au tarif de la centrale. Reprenez les montants de vos factures.</p>
       </div>
     </div>
-  </details>
-
-  <details class="hyp" open>
-    <summary><span>Achats montures &amp; verres <small>prix réels issus de vos factures</small></span></summary>
-    <div class="hyp-body">
-      <div class="grp-title">Volumes actuels (augmentent avec le CA dans le scénario franchisé)</div>
-      <div class="field">
-        <label>Montures vendues / an <span class="value" id="v-volmont"></span></label>
-        <input type="range" id="volmont" min="300" max="3000" step="50" value="1100">
+    <div class="card">
+      <div class="buy">
+        <div class="buy-row">
+          <h3>Montures</h3>
+          <div class="field">
+            <label for="pmi">Indépendant, prix moyen / unité <span class="value" id="v-pmi"></span></label>
+            <input type="range" id="pmi" min="20" max="120" step="1" value="60">
+          </div>
+          <div class="field gold">
+            <label for="pmf">Centrale GAVOILLE, prix moyen / unité <span class="value" id="v-pmf"></span></label>
+            <input type="range" id="pmf" min="20" max="120" step="1" value="46">
+          </div>
+          <div class="buy-gap" id="gap-m"></div>
+        </div>
+        <div class="buy-row">
+          <h3>Verres</h3>
+          <div class="field">
+            <label for="pvi">Indépendant, prix moyen / paire <span class="value" id="v-pvi"></span></label>
+            <input type="range" id="pvi" min="20" max="130" step="1" value="65">
+          </div>
+          <div class="field gold">
+            <label for="pvf">Centrale GAVOILLE, prix moyen / paire <span class="value" id="v-pvf"></span></label>
+            <input type="range" id="pvf" min="20" max="130" step="1" value="50">
+          </div>
+          <div class="buy-gap" id="gap-v"></div>
+        </div>
       </div>
-      <div class="field">
-        <label>Paires de verres vendues / an <span class="value" id="v-volverre"></span></label>
-        <input type="range" id="volverre" min="300" max="3000" step="50" value="1100">
-      </div>
-
-      <div class="grp-title">Prix d'achat — indépendant</div>
-      <div class="field">
-        <label>Monture, prix moyen / unité <span class="value" id="v-pmi"></span></label>
-        <input type="range" id="pmi" min="20" max="120" step="1" value="60">
-      </div>
-      <div class="field">
-        <label>Verre, prix moyen / paire <span class="value" id="v-pvi"></span></label>
-        <input type="range" id="pvi" min="20" max="130" step="1" value="65">
-      </div>
-
-      <div class="grp-title f">Prix d'achat — franchisé GAVOILLE (centrale)</div>
-      <div class="field gold">
-        <label>Monture, prix moyen / unité <span class="value" id="v-pmf"></span></label>
-        <input type="range" id="pmf" min="20" max="120" step="1" value="46">
-      </div>
-      <div class="field gold">
-        <label>Verre, prix moyen / paire <span class="value" id="v-pvf"></span></label>
-        <input type="range" id="pvf" min="20" max="130" step="1" value="50">
-      </div>
-      <div class="saving-note" id="saving-note"></div>
-    </div>
-  </details>
-
-  <details class="hyp" open>
-    <summary><span>Conditions du réseau <small>ce que le franchisé paie en retour</small></span></summary>
-    <div class="hyp-body">
-      <div class="field gold">
-        <label>Redevance de franchise (% du CA) <span class="value" id="v-redevance"></span></label>
-        <input type="range" id="redevance" min="0" max="10" step="0.5" value="5">
-      </div>
-      <div class="field gold">
-        <label>Cotisation marketing réseau (% du CA) <span class="value" id="v-cotis"></span></label>
-        <input type="range" id="cotis" min="0" max="5" step="0.5" value="2">
-      </div>
-      <div class="field gold">
-        <label>Marketing propre restant (part du budget seul) <span class="value" id="v-mktpart"></span></label>
-        <input type="range" id="mktpart" min="0" max="100" step="5" value="40">
-      </div>
-      <div class="field gold">
-        <label>Coût annuel du stock étendu (financement + invendus) <span class="value" id="v-stock"></span></label>
-        <input type="range" id="stock" min="0" max="30000" step="500" value="6000">
+      <div class="saving" id="saving">
+        <span class="lbl" id="saving-lbl">Économie d'achat par an, à volumes identiques</span>
+        <span class="big" id="saving-amt"></span>
       </div>
     </div>
-  </details>
+  </section>
+
+  <!-- ===== ÉTAPE 3 ===== -->
+  <section class="step" aria-labelledby="s3-title">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div>
+        <h2 id="s3-title">Ce que coûte le réseau en face</h2>
+        <p>Ce que le franchisé paie en retour, et le budget marketing qu'il n'a plus à porter seul. Le bilan ci-dessous est calculé à chiffre d'affaires égal.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="fields">
+        <div class="field gold">
+          <label for="redevance">Redevance de franchise (% du CA) <span class="value" id="v-redevance"></span></label>
+          <input type="range" id="redevance" min="0" max="10" step="0.5" value="5">
+        </div>
+        <div class="field gold">
+          <label for="cotis">Cotisation marketing réseau (% du CA) <span class="value" id="v-cotis"></span></label>
+          <input type="range" id="cotis" min="0" max="5" step="0.5" value="2">
+        </div>
+        <div class="field gold">
+          <label for="mktpart">Marketing propre restant (part du budget actuel) <span class="value" id="v-mktpart"></span></label>
+          <input type="range" id="mktpart" min="0" max="100" step="5" value="40">
+        </div>
+        <div class="field gold">
+          <label for="stock">Coût annuel du stock étendu (financement + invendus) <span class="value" id="v-stock"></span></label>
+          <input type="range" id="stock" min="0" max="30000" step="500" value="6000">
+        </div>
+      </div>
+
+      <div class="ledger">
+        <div class="line-item"><span class="lbl">Économie d'achat (étape 2)</span><span class="val pos" id="l-sav"></span></div>
+        <div class="line-item"><span class="lbl">Marketing propre en moins</span><span class="val pos" id="l-mkt"></span></div>
+        <div class="line-item"><span class="lbl" id="l-red-lbl">Redevance</span><span class="val neg" id="l-red"></span></div>
+        <div class="line-item"><span class="lbl" id="l-cot-lbl">Cotisation réseau</span><span class="val neg" id="l-cot"></span></div>
+        <div class="line-item"><span class="lbl">Coût du stock étendu</span><span class="val neg" id="l-stock"></span></div>
+        <div class="line-item result"><span class="lbl">Écart franchisé − indépendant, à CA égal</span><span class="val" id="l-net"></span></div>
+      </div>
+      <div class="verdict" id="s3-verdict"></div>
+    </div>
+  </section>
+
+  <!-- ===== ÉTAPE 4 ===== -->
+  <section class="step" aria-labelledby="s4-title">
+    <div class="step-head">
+      <div class="step-num">4</div>
+      <div>
+        <h2 id="s4-title">Et si, en plus, le chiffre d'affaires progresse…</h2>
+        <p>150 marques, stock profond, visibilité du réseau : faites glisser pour tester une hausse de 0 % à 20 %. Les volumes de montures et de verres suivent le chiffre d'affaires.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="boost-readout">
+        <div class="boost-big">+<span id="boost-val">8</span><small>% de CA</small></div>
+        <div class="boost-ca" id="boost-ca"></div>
+      </div>
+
+      <input type="range" class="boost" id="boost" min="0" max="20" step="0.5" value="8" aria-label="Hausse du chiffre d'affaires en pourcentage">
+      <div class="ticks" id="ticks"></div>
+      <div class="legend-zones">
+        <span><i class="r"></i>Le franchisé est derrière l'indépendant</span>
+        <span><i class="g"></i>Le franchisé est devant</span>
+      </div>
+
+      <div class="results">
+        <div class="rcard i">
+          <div class="tag">Indépendant — résultat net / an</div>
+          <div class="amount" id="r-i-amt"></div>
+          <div class="rate" id="r-i-rate"></div>
+        </div>
+        <div class="delta-badge" id="delta-badge">
+          <div class="d-eyebrow">écart annuel</div>
+          <div class="d-value" id="delta-value">—</div>
+        </div>
+        <div class="rcard f">
+          <div class="tag">Franchisé GAVOILLE — résultat net / an</div>
+          <div class="amount" id="r-f-amt"></div>
+          <div class="rate" id="r-f-rate"></div>
+        </div>
+      </div>
+
+      <div class="verdict" id="verdict"></div>
+
+      <div class="chart-wrap">
+        <p class="chart-title">Résultat net selon la hausse de CA</p>
+        <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Courbe du résultat net du franchisé selon la hausse de chiffre d'affaires, comparée à celui de l'indépendant"></svg>
+        <div class="chart-legend">
+          <span><i class="sw i"></i>Indépendant (inchangé)</span>
+          <span><i class="sw f"></i>Franchisé GAVOILLE</span>
+          <span>◯ Seuil où les deux se rejoignent</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ÉTAPE 5 ===== -->
+  <section class="step" aria-labelledby="s5-title">
+    <div class="step-head">
+      <div class="step-num">5</div>
+      <div>
+        <h2 id="s5-title">Le compte de résultat en détail</h2>
+        <p>Les deux comptes côte à côte, au niveau de hausse choisi à l'étape 4.</p>
+      </div>
+    </div>
+    <div class="pl">
+      <div class="col i">
+        <h3>Indépendant</h3>
+        <div class="line-item"><span class="lbl">Chiffre d'affaires</span><span class="val" id="i-ca"></span></div>
+        <div class="line-item sub"><span class="lbl" id="i-lbl-m">− Achat montures</span><span class="val" id="i-cm"></span></div>
+        <div class="line-item sub"><span class="lbl" id="i-lbl-v">− Achat verres</span><span class="val" id="i-cv"></span></div>
+        <div class="line-item sub"><span class="lbl">− Autres achats</span><span class="val" id="i-aut"></span></div>
+        <div class="line-item"><span class="lbl">Marge brute</span><span class="val" id="i-marge"></span></div>
+        <div class="line-item sub"><span class="lbl">− Charges fixes</span><span class="val" id="i-charges"></span></div>
+        <div class="line-item sub"><span class="lbl">− Marketing propre</span><span class="val" id="i-mkt"></span></div>
+        <div class="line-item sub"><span class="lbl">− Logiciel / gestion</span><span class="val" id="i-log"></span></div>
+        <div class="line-item result"><span class="lbl">Résultat net</span><span class="val" id="i-res"></span></div>
+        <div class="line-item rate"><span class="lbl">Taux de rentabilité</span><span class="val" id="i-taux"></span></div>
+      </div>
+      <div class="col f">
+        <h3>Franchisé GAVOILLE</h3>
+        <div class="line-item"><span class="lbl">Chiffre d'affaires</span><span class="val" id="f-ca"></span></div>
+        <div class="line-item sub"><span class="lbl" id="f-lbl-m">− Achat montures (centrale)</span><span class="val" id="f-cm"></span></div>
+        <div class="line-item sub"><span class="lbl" id="f-lbl-v">− Achat verres (centrale)</span><span class="val" id="f-cv"></span></div>
+        <div class="line-item sub"><span class="lbl">− Autres achats</span><span class="val" id="f-aut"></span></div>
+        <div class="line-item"><span class="lbl">Marge brute</span><span class="val" id="f-marge"></span></div>
+        <div class="line-item sub"><span class="lbl">− Charges fixes</span><span class="val" id="f-charges"></span></div>
+        <div class="line-item sub"><span class="lbl">− Marketing propre restant</span><span class="val" id="f-mkt"></span></div>
+        <div class="line-item sub"><span class="lbl">− Logiciel / gestion</span><span class="val" id="f-log"></span></div>
+        <div class="line-item sub"><span class="lbl">− Redevance + cotisation réseau</span><span class="val" id="f-red"></span></div>
+        <div class="line-item sub"><span class="lbl">− Coût du stock étendu</span><span class="val" id="f-stock"></span></div>
+        <div class="line-item result"><span class="lbl">Résultat net</span><span class="val" id="f-res"></span></div>
+        <div class="line-item rate"><span class="lbl">Taux de rentabilité</span><span class="val" id="f-taux"></span></div>
+      </div>
+    </div>
+  </section>
 
   <p class="foot-note">Hypothèses de calcul : les volumes de montures et de verres augmentent proportionnellement au CA dans le scénario franchisé (donc le coût d'achat aussi) ; les charges fixes restent identiques. Le modèle ignore la fiscalité, l'éventuel droit d'entrée, la rémunération du gérant et l'effet d'un prix de vente différent. Il sert à rendre un raisonnement lisible, pas à remplacer une étude prévisionnelle chiffrée.</p>
 
@@ -408,9 +472,10 @@
 <script>
 const nf = new Intl.NumberFormat('fr-FR', {maximumFractionDigits:0});
 const eur = n => nf.format(Math.round(n)) + ' €';
-const eurSigned = n => (n >= 0 ? '+' : '−') + nf.format(Math.abs(Math.round(n))) + ' €';
+const eurSigned = n => (Math.round(n) >= 0 ? '+' : '−') + nf.format(Math.abs(Math.round(n))) + ' €';
 const pct = n => n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' %';
-const MIN_B = 1, MAX_B = 20;
+const pctTxt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:1});
+const MIN_B = 0, MAX_B = 20;
 
 const ids = ['boost','ca','charges','autres','mkt','logiciel','volmont','volverre',
              'pmi','pvi','pmf','pvf','redevance','cotis','mktpart','stock'];
@@ -418,13 +483,13 @@ const el = {};
 ids.forEach(id => el[id] = document.getElementById(id));
 const $ = id => document.getElementById(id);
 
-// ticks sous la réglette
+// graduations sous la réglette
 (function buildTicks(){
   const t = $('ticks');
-  [1,5,10,15,20].forEach(v => {
+  [0,5,10,15,20].forEach(v => {
     const s = document.createElement('span');
     s.className = 'tick';
-    s.textContent = '+' + v + ' %';
+    s.textContent = (v === 0 ? '' : '+') + v + ' %';
     const frac = (v - MIN_B) / (MAX_B - MIN_B);
     s.style.left = 'calc(' + frac + ' * (100% - 38px) + 19px)';
     t.appendChild(s);
@@ -480,8 +545,8 @@ function updateLabels(){
   $('v-pvi').textContent = eur(+el.pvi.value);
   $('v-pmf').textContent = eur(+el.pmf.value);
   $('v-pvf').textContent = eur(+el.pvf.value);
-  $('v-redevance').textContent = el.redevance.value + ' %';
-  $('v-cotis').textContent = el.cotis.value + ' %';
+  $('v-redevance').textContent = pctTxt(+el.redevance.value) + ' %';
+  $('v-cotis').textContent = pctTxt(+el.cotis.value) + ' %';
   $('v-mktpart').textContent = el.mktpart.value + ' %';
   $('v-stock').textContent = eur(+el.stock.value);
 }
@@ -500,32 +565,25 @@ function drawChart(p, bNow, be){
   const Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
 
   let s = '';
-  // grille + axe Y
   for (let k = 0; k <= 4; k++){
     const v = lo + (hi - lo) * k / 4;
     const y = Y(v);
     s += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" style="stroke:var(--line)" stroke-width="1"/>';
     s += '<text x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11" style="fill:var(--ink-soft)">'+Math.round(v/1000)+' k€</text>';
   }
-  // axe X
-  [1,5,10,15,20].forEach(b => {
-    s += '<text x="'+X(b)+'" y="'+(H-14)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" style="fill:var(--ink-soft)">+'+b+' %</text>';
+  [0,5,10,15,20].forEach(b => {
+    s += '<text x="'+X(b)+'" y="'+(H-14)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" style="fill:var(--ink-soft)">'+(b ? '+' : '')+b+' %</text>';
   });
-  // ligne 0 si visible
   if (lo < 0 && hi > 0){
     s += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" style="stroke:var(--line-strong)" stroke-width="1.5"/>';
   }
-  // indépendant
   s += '<line x1="'+X(MIN_B)+'" x2="'+X(MAX_B)+'" y1="'+Y(iRes)+'" y2="'+Y(iRes)+'" style="stroke:var(--teal)" stroke-width="3.5" stroke-linecap="round"/>';
-  // franchisé
   const pts = xs.map((b,i) => X(b)+','+Y(fVals[i])).join(' ');
   s += '<polyline points="'+pts+'" fill="none" style="stroke:var(--gold)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>';
-  // seuil
   if (!be.never && be.b >= MIN_B && be.b <= MAX_B){
     s += '<circle cx="'+X(be.b)+'" cy="'+Y(iRes)+'" r="8" style="fill:var(--paper-raised);stroke:var(--ink)" stroke-width="2.5"/>';
     s += '<text x="'+X(be.b)+'" y="'+(Y(iRes)-16)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" font-weight="600" style="fill:var(--ink)">+'+be.b.toFixed(1).replace('.',',')+' %</text>';
   }
-  // marqueur position courante
   const fNow = calc(p, bNow).fRes;
   s += '<line x1="'+X(bNow)+'" x2="'+X(bNow)+'" y1="'+T+'" y2="'+(H-B)+'" style="stroke:var(--ink)" stroke-width="1.5" stroke-dasharray="4 4"/>';
   s += '<circle cx="'+X(bNow)+'" cy="'+Y(fNow)+'" r="7" style="fill:var(--gold);stroke:var(--paper-raised)" stroke-width="2.5"/>';
@@ -537,19 +595,60 @@ function compute(){
   const p = getParams();
   const bNow = +el.boost.value;
   const r = calc(p, bNow);
+  const r0 = calc(p, 0);
   const be = breakEven(p);
 
-  // lecture de la réglette
+  // ----- Étape 1 -----
+  $('s1-res').textContent = eur(r0.iRes);
+  $('s1-rate').textContent = pct(r0.iRes / p.ca * 100) + ' du CA';
+
+  // ----- Étape 2 -----
+  const dM = p.pmi - p.pmf, dV = p.pvi - p.pvf;
+  const savM = p.vm * dM, savV = p.vv * dV, sav = savM + savV;
+  $('gap-m').innerHTML = 'Écart : <strong>' + eurSigned(dM) + '</strong> par monture × ' + nf.format(p.vm) + ' = <strong>' + eurSigned(savM) + '</strong> / an';
+  $('gap-v').innerHTML = 'Écart : <strong>' + eurSigned(dV) + '</strong> par paire × ' + nf.format(p.vv) + ' = <strong>' + eurSigned(savV) + '</strong> / an';
+  $('saving-amt').textContent = eurSigned(sav);
+  $('saving').classList.toggle('neg', sav < 0);
+  $('saving-lbl').textContent = sav >= 0
+    ? 'Économie d\'achat par an, à volumes identiques'
+    : 'Surcoût d\'achat par an, à volumes identiques';
+
+  // ----- Étape 3 : bilan à CA égal -----
+  const mktSaved = p.mkt * (1 - p.mktPart);
+  const redAmt = p.ca * p.red, cotAmt = p.ca * p.cotis;
+  const net0 = r0.fRes - r0.iRes; // = sav + mktSaved - redAmt - cotAmt - stock
+  $('l-sav').textContent = eurSigned(sav);
+  $('l-sav').className = 'val ' + (sav >= 0 ? 'pos' : 'neg');
+  $('l-mkt').textContent = eurSigned(mktSaved);
+  $('l-red-lbl').textContent = 'Redevance (' + pctTxt(p.red * 100) + ' % de ' + eur(p.ca) + ')';
+  $('l-red').textContent = eurSigned(-redAmt);
+  $('l-cot-lbl').textContent = 'Cotisation réseau (' + pctTxt(p.cotis * 100) + ' % de ' + eur(p.ca) + ')';
+  $('l-cot').textContent = eurSigned(-cotAmt);
+  $('l-stock').textContent = eurSigned(-p.stock);
+  $('l-net').textContent = eurSigned(net0);
+  $('l-net').className = 'val ' + (net0 >= 0 ? 'pos' : 'neg');
+
+  const v3 = $('s3-verdict');
+  v3.classList.remove('ok','ko');
+  const networkCost = redAmt + cotAmt + p.stock;
+  if (net0 >= 0){
+    v3.innerHTML = '<strong>Le réseau est déjà remboursé par vos achats.</strong> À chiffre d\'affaires égal, le franchisé gagne <strong>' + eurSigned(net0) + '</strong> de plus par an. Toute hausse de chiffre d\'affaires vient en plus.';
+    v3.classList.add('ok');
+  } else {
+    const cover = networkCost > 0 ? Math.max(0, (sav + mktSaved) / networkCost * 100) : 0;
+    v3.innerHTML = 'À chiffre d\'affaires égal, les économies couvrent <strong>' + Math.round(cover) + ' %</strong> du coût du réseau. Il manque <strong>' + eur(-net0) + '</strong> par an : c\'est la hausse de chiffre d\'affaires (étape 4) qui doit faire la différence.';
+    v3.classList.add('ko');
+  }
+
+  // ----- Étape 4 -----
   $('boost-val').textContent = bNow.toLocaleString('fr-FR', {minimumFractionDigits: (bNow % 1 ? 1 : 0), maximumFractionDigits:1});
   $('boost-ca').textContent = eur(p.ca) + '  →  ' + eur(r.fCA) + ' de CA';
 
-  // couleur de la piste : rouge avant le seuil, vert après
   let split;
   if (be.never) split = 100;
   else split = Math.max(0, Math.min(100, (be.b - MIN_B) / (MAX_B - MIN_B) * 100));
   el.boost.style.setProperty('--split', split + '%');
 
-  // cartes de résultat
   $('r-i-amt').textContent = eur(r.iRes);
   $('r-i-rate').textContent = pct(r.iRes / p.ca * 100) + ' du CA';
   $('r-f-amt').textContent = eur(r.fRes);
@@ -561,15 +660,15 @@ function compute(){
   badge.classList.add(delta >= 0 ? 'positive' : 'negative');
   $('delta-value').textContent = eurSigned(delta);
 
-  // verdict
   const v = $('verdict');
   v.classList.remove('ok','ko');
+  const bTxt = '+' + bNow.toLocaleString('fr-FR') + ' %';
   let txt;
   if (be.never){
     txt = '<strong>Dans ces hypothèses, le franchisé ne rattrape jamais l\'indépendant :</strong> redevance, cotisation et coût d\'achat absorbent plus que la marge de chaque euro de CA supplémentaire. Revoyez les prix d\'achat ou les conditions du réseau.';
     v.classList.add('ko');
   } else if (be.b <= 0){
-    txt = '<strong>Le franchisé est déjà devant sans aucune hausse de CA :</strong> les économies d\'achat couvrent les coûts du réseau. Toute progression de CA vient en plus.';
+    txt = '<strong>Le franchisé est devant dès 0 % de hausse.</strong> À ' + bTxt + ' de CA, l\'écart atteint <strong>' + eurSigned(delta) + '</strong> par an.';
     v.classList.add('ok');
   } else if (be.b > MAX_B){
     txt = 'Il faudrait <strong>+' + be.b.toFixed(1).replace('.',',') + ' % de CA</strong>, au-delà de la plage de la réglette, pour que le franchisé rattrape l\'indépendant.';
@@ -577,12 +676,12 @@ function compute(){
   } else {
     const ahead = delta >= 0;
     txt = 'Le franchisé rattrape l\'indépendant à partir de <strong>+' + be.b.toFixed(1).replace('.',',') + ' % de CA</strong>. ' +
-          (ahead ? 'À +' + bNow.toLocaleString('fr-FR') + ' %, il est devant.' : 'À +' + bNow.toLocaleString('fr-FR') + ' %, il est encore derrière.');
+          (ahead ? 'À ' + bTxt + ', il est devant.' : 'À ' + bTxt + ', il est encore derrière.');
     v.classList.add(ahead ? 'ok' : 'ko');
   }
   v.innerHTML = txt;
 
-  // P&L indépendant
+  // ----- Étape 5 : P&L -----
   $('i-ca').textContent = eur(p.ca);
   $('i-lbl-m').textContent = '− Achat montures (' + nf.format(p.vm) + ' × ' + eur(p.pmi) + ')';
   $('i-lbl-v').textContent = '− Achat verres (' + nf.format(p.vv) + ' × ' + eur(p.pvi) + ')';
@@ -596,7 +695,6 @@ function compute(){
   $('i-res').textContent = eur(r.iRes);
   $('i-taux').textContent = pct(r.iRes / p.ca * 100);
 
-  // P&L franchisé
   $('f-ca').textContent = eur(r.fCA);
   $('f-lbl-m').textContent = '− Achat montures (' + nf.format(r.fVM) + ' × ' + eur(p.pmf) + ')';
   $('f-lbl-v').textContent = '− Achat verres (' + nf.format(r.fVV) + ' × ' + eur(p.pvf) + ')';
@@ -611,9 +709,6 @@ function compute(){
   $('f-stock').textContent = '− ' + eur(p.stock);
   $('f-res').textContent = eur(r.fRes);
   $('f-taux').textContent = pct(r.fRes / r.fCA * 100);
-
-  // note d'économie centrale
-  $('saving-note').innerHTML = 'Économie centrale : <strong>' + eur(p.pmi - p.pmf) + '</strong> par monture · <strong>' + eur(p.pvi - p.pvf) + '</strong> par paire de verres — soit <strong>' + eur(p.vm * (p.pmi - p.pmf) + p.vv * (p.pvi - p.pvf)) + '</strong> par an à volumes actuels.';
 
   drawChart(p, bNow, be);
   updateLabels();
