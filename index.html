@@ -249,6 +249,11 @@
   .years td{ font-family:'IBM Plex Mono', monospace; }
   .years td.pos{ color:var(--good); }
   .years td.neg{ color:var(--bad); }
+  .bareme{ grid-column:1/-1; }
+  .bareme table{ border-collapse:collapse; font-size:13.5px; }
+  .bareme td{ padding:5px 10px 5px 0; vertical-align:middle; }
+  .bareme .num{ width:110px; }
+  .bareme select{ padding:5px 8px; border:1px solid var(--line-strong); border-radius:3px; background:var(--paper); color:var(--ink); font:inherit; font-size:13px; max-width:100%; }
 </style>
 </head>
 <body>
@@ -258,7 +263,7 @@
   <h1>Indépendant <em>ou</em> franchisé.<br>Lequel voyez-vous le mieux ?</h1>
   <p class="lede">En six étapes : votre magasin tel qu'il est, ce que vous payez vos montures et vos verres, ce que coûte le réseau en face, ce que change une hausse des ventes, le détail des deux comptes, puis ce que coûte le passage et en combien de temps il est remboursé. Tout se recalcule en direct.</p>
   <div class="disclaimer">
-    <strong>À lire avant utilisation.</strong> Tous les montants sont <strong>hors taxes</strong>. Chaque valeur peut être saisie au chiffre près dans sa case ou réglée avec le curseur. Les valeurs proposées par défaut (prix centrale, redevance, cotisation, droit d'entrée, travaux) sont des ordres de grandeur : remplacez-les par les conditions contractuelles GAVOILLE et par les factures réelles du magasin. Le résultat présenté est un <strong>EBE</strong> (excédent brut d'exploitation), calculé avant rémunération du gérant, amortissements, frais financiers et impôt : ce n'est pas un résultat net comptable. La hausse des ventes de l'étape 4 est réglée à 0 % : c'est une hypothèse, à n'utiliser qu'avec des mesures terrain.
+    <strong>À lire avant utilisation.</strong> Tous les montants sont <strong>hors taxes</strong>. Chaque valeur peut être saisie au chiffre près dans sa case ou réglée avec le curseur. Le droit d'entrée, la redevance (2 %, 3 %, 4 % puis barème dégressif), l'absence de cotisation marketing et la durée de 4 ans reprennent le contrat de franchise (art. 25 et 27). Les autres valeurs par défaut (prix centrale, travaux, stock) sont des ordres de grandeur : remplacez-les par la grille tarifaire GAVOILLE et par les factures réelles du magasin. Le résultat présenté est un <strong>EBE</strong> (excédent brut d'exploitation), calculé avant rémunération du gérant, amortissements, frais financiers et impôt : ce n'est pas un résultat net comptable. La hausse des ventes de l'étape 4 est réglée à 0 % : c'est une hypothèse, à n'utiliser qu'avec des mesures terrain.
   </div>
 
   <!-- ===== ÉTAPE 1 ===== -->
@@ -365,18 +370,33 @@
       <div class="step-num">3</div>
       <div>
         <h2 id="s3-title">Ce que coûte le réseau en face</h2>
-        <p>Ce que le franchisé paie en retour, le logiciel commun du réseau, et le budget marketing qu'il n'a plus à porter seul. Les taux de redevance et de cotisation montent progressivement les trois premières années : le bilan ci-dessous est calculé au taux plein (année 4 et suivantes), à volumes de ventes égaux. Les taux réduits sont pris en compte année par année à l'étape 6.</p>
+        <p>Ce que le franchisé paie en retour, le logiciel commun du réseau, et le budget marketing qu'il n'a plus à porter seul. La redevance monte progressivement les trois premières années, puis suit un barème dégressif selon le chiffre d'affaires (contrat, art. 25) : le bilan ci-dessous est calculé avec le barème de l'année 4 et suivantes, à volumes de ventes égaux. Les taux des trois premières années sont pris en compte année par année à l'étape 6.</p>
       </div>
     </div>
     <div class="card">
       <div class="fields">
-        <div class="field gold">
-          <label for="redevance">Redevance de franchise, taux plein (% du CA HT) <span class="value" id="v-redevance"></span></label>
-          <input type="range" id="redevance" min="0" max="10" step="0.25" value="5">
+        <div class="field gold bareme">
+          <label>Redevance à partir de l'année 4 : barème dégressif selon le CA HT annuel</label>
+          <table>
+            <tr><td>Jusqu'à</td><td><input type="number" class="num" id="bs1" value="400000" step="any" min="0" aria-label="Plafond de la tranche 1"> €</td><td><input type="number" class="num" id="br1" value="3.8" step="any" min="0" aria-label="Taux de la tranche 1"> %</td></tr>
+            <tr><td>Jusqu'à</td><td><input type="number" class="num" id="bs2" value="500000" step="any" min="0" aria-label="Plafond de la tranche 2"> €</td><td><input type="number" class="num" id="br2" value="3.6" step="any" min="0" aria-label="Taux de la tranche 2"> %</td></tr>
+            <tr><td>Jusqu'à</td><td><input type="number" class="num" id="bs3" value="600000" step="any" min="0" aria-label="Plafond de la tranche 3"> €</td><td><input type="number" class="num" id="br3" value="3.4" step="any" min="0" aria-label="Taux de la tranche 3"> %</td></tr>
+            <tr><td>Jusqu'à</td><td><input type="number" class="num" id="bs4" value="700000" step="any" min="0" aria-label="Plafond de la tranche 4"> €</td><td><input type="number" class="num" id="br4" value="3.2" step="any" min="0" aria-label="Taux de la tranche 4"> %</td></tr>
+            <tr><td>Au-delà</td><td></td><td><input type="number" class="num" id="br5" value="3" step="any" min="0" aria-label="Taux au-delà de la dernière tranche"> %</td></tr>
+          </table>
+          <div class="hint" style="margin-top:10px">
+            <label for="bmode" style="display:inline;font-weight:500">Application du barème :</label>
+            <select id="bmode">
+              <option value="global">Taux de la tranche atteinte, sur tout le CA</option>
+              <option value="tranches">Par tranches (chaque part du CA à son taux)</option>
+            </select>
+          </div>
+          <div class="hint">Le contrat ne précise pas laquelle des deux lectures s'applique : à faire trancher avant signature.</div>
         </div>
         <div class="field gold">
-          <label for="cotis">Cotisation marketing réseau, taux plein (% du CA HT) <span class="value" id="v-cotis"></span></label>
-          <input type="range" id="cotis" min="0" max="5" step="0.25" value="2">
+          <label for="cotis">Cotisation marketing réseau, année 4 et suivantes (% du CA HT) <span class="value" id="v-cotis"></span></label>
+          <input type="range" id="cotis" min="0" max="5" step="0.25" value="0">
+          <div class="hint">Le contrat ne prévoit pas de cotisation marketing (art. 25).</div>
         </div>
         <div class="field gold">
           <label for="mktpart">Marketing propre restant (part du budget actuel) <span class="value" id="v-mktpart"></span></label>
@@ -385,7 +405,7 @@
         <div class="field gold">
           <label for="logf">Logiciel réseau, gestion, formation HT / an <span class="value" id="v-logf"></span></label>
           <input type="range" id="logf" min="0" max="20000" step="500" value="6000">
-          <div class="hint">Le logiciel est commun à tout le réseau : indiquez son coût réel pour le franchisé.</div>
+          <div class="hint">Logiciels réseau obligatoires : acquisition, abonnement, maintenance et formation à la charge du franchisé (art. 3.5).</div>
         </div>
         <div class="field gold">
           <label for="pvm">Évolution du prix de vente moyen sous l'enseigne <span class="value" id="v-pvm"></span></label>
@@ -396,14 +416,14 @@
           <label for="stock">Coût annuel du stock étendu (financement + invendus) <span class="value" id="v-stock"></span></label>
           <input type="range" id="stock" min="0" max="40000" step="500" value="6000">
         </div>
-        <div class="grp-title f">Montée progressive des taux — années 1 à 3</div>
+        <div class="grp-title f">Montée progressive des taux — années 1 à 3 (contrat : redevance 2 %, 3 %, 4 %)</div>
         <div class="field gold">
           <label for="red1">Redevance année 1 (% du CA HT) <span class="value" id="v-red1"></span></label>
           <input type="range" id="red1" min="0" max="10" step="0.25" value="2">
         </div>
         <div class="field gold">
           <label for="cot1">Cotisation année 1 (% du CA HT) <span class="value" id="v-cot1"></span></label>
-          <input type="range" id="cot1" min="0" max="5" step="0.25" value="1">
+          <input type="range" id="cot1" min="0" max="5" step="0.25" value="0">
         </div>
         <div class="field gold">
           <label for="red2">Redevance année 2 (% du CA HT) <span class="value" id="v-red2"></span></label>
@@ -411,7 +431,7 @@
         </div>
         <div class="field gold">
           <label for="cot2">Cotisation année 2 (% du CA HT) <span class="value" id="v-cot2"></span></label>
-          <input type="range" id="cot2" min="0" max="5" step="0.25" value="1.5">
+          <input type="range" id="cot2" min="0" max="5" step="0.25" value="0">
         </div>
         <div class="field gold">
           <label for="red3">Redevance année 3 (% du CA HT) <span class="value" id="v-red3"></span></label>
@@ -419,7 +439,7 @@
         </div>
         <div class="field gold">
           <label for="cot3">Cotisation année 3 (% du CA HT) <span class="value" id="v-cot3"></span></label>
-          <input type="range" id="cot3" min="0" max="5" step="0.25" value="2">
+          <input type="range" id="cot3" min="0" max="5" step="0.25" value="0">
         </div>
       </div>
 
@@ -431,7 +451,7 @@
         <div class="line-item"><span class="lbl" id="l-red-lbl">Redevance</span><span class="val neg" id="l-red"></span></div>
         <div class="line-item"><span class="lbl" id="l-cot-lbl">Cotisation réseau</span><span class="val neg" id="l-cot"></span></div>
         <div class="line-item"><span class="lbl">Coût du stock étendu</span><span class="val neg" id="l-stock"></span></div>
-        <div class="line-item result"><span class="lbl">Écart d'EBE franchisé − indépendant, à volumes égaux, au taux plein</span><span class="val" id="l-net"></span></div>
+        <div class="line-item result"><span class="lbl">Écart d'EBE franchisé − indépendant, à volumes égaux, année 4 et suivantes</span><span class="val" id="l-net"></span></div>
       </div>
       <div class="verdict" id="s3-verdict"></div>
     </div>
@@ -496,7 +516,7 @@
       <div class="step-num">5</div>
       <div>
         <h2 id="s5-title">Les deux comptes en détail</h2>
-        <p>Les deux comptes côte à côte, hors taxes, au niveau de hausse choisi à l'étape 4, avec la redevance et la cotisation au taux plein (année 4 et suivantes).</p>
+        <p>Les deux comptes côte à côte, hors taxes, au niveau de hausse choisi à l'étape 4, avec la redevance et la cotisation de l'année 4 et suivantes.</p>
       </div>
     </div>
     <div class="pl">
@@ -539,14 +559,15 @@
       <div class="step-num">6</div>
       <div>
         <h2 id="s6-title">Ce que coûte le passage, et quand il est remboursé</h2>
-        <p>Le passage sous l'enseigne demande un investissement de départ, et la première année est souvent perturbée (travaux, nouvelle enseigne que la clientèle doit reconnaître). Le tableau suit l'écart d'EBE année par année sur cinq ans.</p>
+        <p>Le passage sous l'enseigne demande un investissement de départ, et la première année est souvent perturbée (travaux, nouvelle enseigne que la clientèle doit reconnaître). Le tableau suit l'écart d'EBE année par année sur la durée analysée.</p>
       </div>
     </div>
     <div class="card">
       <div class="fields">
         <div class="field gold">
           <label for="droit">Droit d'entrée HT <span class="value" id="v-droit"></span></label>
-          <input type="range" id="droit" min="0" max="60000" step="1000" value="15000">
+          <input type="range" id="droit" min="0" max="60000" step="500" value="1500">
+          <div class="hint">Contrat : 1 500 € HT payables à la signature (art. 25).</div>
         </div>
         <div class="field gold">
           <label for="travaux">Travaux de passage d'enseigne HT (enseigne, agencement, PLV) <span class="value" id="v-travaux"></span></label>
@@ -559,7 +580,12 @@
         <div class="field gold">
           <label for="dip">Baisse des ventes l'année du passage <span class="value" id="v-dip"></span></label>
           <input type="range" id="dip" min="0" max="20" step="0.5" value="5">
-          <div class="hint">Année 2 : la moitié de la hausse choisie à l'étape 4. Années 3 à 5 : la hausse complète. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis taux plein.</div>
+          <div class="hint">Année 2 : la moitié de la hausse choisie à l'étape 4. Années suivantes : la hausse complète. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis barème.</div>
+        </div>
+        <div class="field gold">
+          <label for="duree">Durée analysée (années) <span class="value" id="v-duree"></span></label>
+          <input type="range" id="duree" min="1" max="10" step="1" value="4">
+          <div class="hint">Contrat : 4 ans, puis reconduction tacite par périodes de 3 ans (art. 27 et 28).</div>
         </div>
       </div>
 
@@ -591,15 +617,15 @@ const eurSigned = n => (Math.round(n) >= 0 ? '+' : '−') + nf.format(Math.abs(M
 const pct = n => n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' %';
 const pctTxt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:2});
 const pctSigned = n => (n > 0 ? '+' : n < 0 ? '−' : '') + pctTxt(Math.abs(n)) + ' %';
-const MIN_B = 0, MAX_B = 20, YEARS = 5;
+const MIN_B = 0, MAX_B = 20;
 const $ = id => document.getElementById(id);
 
 // Champs saisissables : curseur + case de saisie exacte
 const UNITS = {
   ca:'€', charges:'€', volmont:'unités', volverre:'paires', autres:'%', mkt:'€', logiciel:'€',
   pmi:'€', pmf:'€', pvi:'€', pvf:'€',
-  redevance:'%', cotis:'%', red1:'%', cot1:'%', red2:'%', cot2:'%', red3:'%', cot3:'%', mktpart:'%', logf:'€', pvm:'%', stock:'€',
-  droit:'€', travaux:'€', stockinit:'€', dip:'%'
+  cotis:'%', red1:'%', cot1:'%', red2:'%', cot2:'%', red3:'%', cot3:'%', mktpart:'%', logf:'€', pvm:'%', stock:'€',
+  duree:'ans', droit:'€', travaux:'€', stockinit:'€', dip:'%'
 };
 const vals = {};
 Object.keys(UNITS).forEach(id => {
@@ -626,6 +652,7 @@ Object.keys(UNITS).forEach(id => {
 });
 const boostEl = $('boost');
 boostEl.addEventListener('input', compute);
+['bs1','bs2','bs3','bs4','br1','br2','br3','br4','br5','bmode'].forEach(id => $(id).addEventListener('input', compute));
 
 // graduations sous la réglette
 (function buildTicks(){
@@ -647,7 +674,13 @@ function getParams(){
     mkt: v.mkt, logiciel: v.logiciel, logF: v.logf,
     vm: v.volmont, vv: v.volverre,
     pmi: v.pmi, pvi: v.pvi, pmf: v.pmf, pvf: v.pvf,
-    red: v.redevance / 100, cotis: v.cotis / 100,
+    cotis: v.cotis / 100,
+    bar: {
+      seuils: ['bs1','bs2','bs3','bs4'].map(id => +$(id).value || 0),
+      taux: ['br1','br2','br3','br4','br5'].map(id => (+$(id).value || 0) / 100),
+      mode: $('bmode').value
+    },
+    duree: Math.max(1, Math.round(v.duree)),
     mktPart: v.mktpart / 100,
     ry: [v.red1, v.red2, v.red3].map(x => x / 100), cy: [v.cot1, v.cot2, v.cot3].map(x => x / 100), stock: v.stock, pv: v.pvm / 100,
     invest: v.droit + v.travaux + v.stockinit, dip: v.dip
@@ -655,9 +688,24 @@ function getParams(){
 }
 
 // bPct : évolution des ventes en volume du franchisé par rapport au magasin actuel (peut être négative)
-// rates (facultatif) : {red, cotis} pour une année de montée progressive ; sinon taux plein
+// Redevance de l'année 4 et suivantes, selon le barème dégressif
+function redevanceBareme(p, ca){
+  const s = p.bar.seuils, r = p.bar.taux;
+  if (ca <= 0) return 0;
+  if (p.bar.mode === 'tranches'){
+    let amt = 0, lo = 0;
+    for (let i = 0; i < s.length; i++){
+      if (ca <= s[i]) return amt + (ca - lo) * r[i];
+      amt += (s[i] - lo) * r[i]; lo = s[i];
+    }
+    return amt + (ca - lo) * r[s.length];
+  }
+  for (let i = 0; i < s.length; i++) if (ca <= s[i]) return ca * r[i];
+  return ca * r[s.length];
+}
+
+// rates (facultatif) : {red, cotis} pour une année de montée progressive ; sinon barème + cotisation
 function calc(p, bPct, rates){
-  const red = rates ? rates.red : p.red, cotis = rates ? rates.cotis : p.cotis;
   const g = 1 + bPct / 100;
   // Indépendant (référence, inchangé)
   const iCM = p.vm * p.pmi, iCV = p.vv * p.pvi, iAut = p.ca * p.autres;
@@ -669,7 +717,7 @@ function calc(p, bPct, rates){
   const fCM = fVM * p.pmf, fCV = fVV * p.pvf, fAut = p.ca * g * p.autres;
   const fMarge = fCA - fCM - fCV - fAut;
   const fMkt = p.mkt * p.mktPart;
-  const fRed = fCA * (red + cotis);
+  const fRed = rates ? fCA * (rates.red + rates.cotis) : redevanceBareme(p, fCA) + fCA * p.cotis;
   const fRes = fMarge - p.charges - fMkt - p.logF - fRed - p.stock;
   return {iCM,iCV,iAut,iMarge,iRes, fCA,fVM,fVV,fCM,fCV,fAut,fMarge,fMkt,fRed,fRes};
 }
@@ -677,10 +725,23 @@ function calc(p, bPct, rates){
 // Seuil de bascule : hausse des ventes en volume (%) pour laquelle l'EBE du franchisé = celui de l'indépendant
 function breakEven(p){
   const iRes = calc(p, 0).iRes;
-  const K = p.ca * (1 + p.pv) * (1 - p.red - p.cotis) - p.ca * p.autres - (p.vm * p.pmf + p.vv * p.pvf);
-  const fixedF = p.charges + p.mkt * p.mktPart + p.logF + p.stock;
-  if (K <= 0) return {never:true};
-  return {never:false, b: ((iRes + fixedF) / K - 1) * 100};
+  const d = b => calc(p, b).fRes - iRes;
+  const STEP = 0.05;
+  if (d(0) >= 0){
+    for (let b = -STEP; b >= -60; b -= STEP){
+      if (d(b) < 0) return {never:false, b: b + STEP};
+    }
+    return {never:false, b: -60};
+  }
+  for (let b = STEP; b <= 200; b += STEP){
+    const v = d(b);
+    if (v >= 0){
+      const prev = d(b - STEP);
+      const frac = (v - prev) !== 0 ? -prev / (v - prev) : 1;
+      return {never:false, b: b - STEP + STEP * Math.min(1, Math.max(0, frac))};
+    }
+  }
+  return {never:true};
 }
 
 function drawChart(p, bNow, be){
@@ -761,7 +822,7 @@ function compute(){
   const mktSaved = p.mkt * (1 - p.mktPart);
   const logDiff = p.logiciel - p.logF;
   const caF0 = p.ca * (1 + p.pv), pxEff = p.ca * p.pv;
-  const redAmt = caF0 * p.red, cotAmt = caF0 * p.cotis;
+  const redAmt = redevanceBareme(p, caF0), cotAmt = caF0 * p.cotis;
   const net0 = r0.fRes - r0.iRes; // = pxEff + sav + mktSaved + logDiff - redAmt - cotAmt - stock
   $('l-px-lbl').textContent = 'Effet prix de vente (' + pctSigned(p.pv * 100) + ' sur ' + eur(p.ca) + ')';
   $('l-px').textContent = eurSigned(pxEff);
@@ -771,7 +832,7 @@ function compute(){
   $('l-mkt').textContent = eurSigned(mktSaved);
   $('l-log').textContent = eurSigned(logDiff);
   $('l-log').className = 'val ' + (logDiff > 0 ? 'pos' : logDiff < 0 ? 'neg' : '');
-  $('l-red-lbl').textContent = 'Redevance (' + pctTxt(p.red * 100) + ' % de ' + eur(caF0) + ')';
+  $('l-red-lbl').textContent = 'Redevance année 4+ (barème : ' + pctTxt(caF0 > 0 ? redAmt / caF0 * 100 : 0) + ' % de ' + eur(caF0) + ')';
   $('l-red').textContent = eurSigned(-redAmt);
   $('l-cot-lbl').textContent = 'Cotisation réseau (' + pctTxt(p.cotis * 100) + ' % de ' + eur(caF0) + ')';
   $('l-cot').textContent = eurSigned(-cotAmt);
@@ -869,15 +930,16 @@ function compute(){
   $('inv-total').textContent = eur(p.invest);
   let cum = -p.invest, payback = null, rows = '';
   rows += '<tr><td>Départ</td><td>—</td><td>—</td><td>—</td><td class="' + (cum < 0 ? 'neg' : 'pos') + '">' + eurSigned(cum) + '</td></tr>';
-  for (let y = 1; y <= YEARS; y++){
+  for (let y = 1; y <= p.duree; y++){
     const b = y === 1 ? -p.dip : (y === 2 ? bNow / 2 : bNow);
-    const rates = y <= 3 ? {red: p.ry[y-1], cotis: p.cy[y-1]} : {red: p.red, cotis: p.cotis};
-    const d = calc(p, b, rates).fRes - r0.iRes;
+    const rates = y <= 3 ? {red: p.ry[y-1], cotis: p.cy[y-1]} : null;
+    const ry = calc(p, b, rates);
+    const d = ry.fRes - r0.iRes;
     const prev = cum;
     cum += d;
     if (payback === null && prev < 0 && cum >= 0) payback = (y - 1) + (-prev / d);
     if (payback === null && p.invest <= 0 && y === 1 && cum >= 0) payback = 0;
-    rows += '<tr><td>Année ' + y + '</td><td>' + pctSigned(b) + '</td><td>' + pctTxt((rates.red + rates.cotis) * 100) + ' %</td>' +
+    rows += '<tr><td>Année ' + y + '</td><td>' + pctSigned(b) + '</td><td>' + pctTxt(ry.fCA > 0 ? ry.fRed / ry.fCA * 100 : 0) + ' %</td>' +
             '<td class="' + (d >= 0 ? 'pos' : 'neg') + '">' + eurSigned(d) + '</td>' +
             '<td class="' + (cum >= 0 ? 'pos' : 'neg') + '">' + eurSigned(cum) + '</td></tr>';
   }
@@ -886,10 +948,10 @@ function compute(){
   v6.classList.remove('ok','ko');
   if (payback !== null){
     const yrs = payback.toLocaleString('fr-FR', {maximumFractionDigits:1});
-    v6.innerHTML = 'L\'investissement de passage (' + eur(p.invest) + ') est remboursé par l\'écart d\'EBE en <strong>' + yrs + ' an' + (payback >= 2 ? 's' : '') + '</strong>. Sur cinq ans, le franchisé cumule <strong>' + eurSigned(cum) + '</strong> de plus que l\'indépendant, investissement déduit, avant impôt.';
+    v6.innerHTML = 'L\'investissement de passage (' + eur(p.invest) + ') est remboursé par l\'écart d\'EBE en <strong>' + yrs + ' an' + (payback >= 2 ? 's' : '') + '</strong>. Sur ' + p.duree + ' an' + (p.duree > 1 ? 's' : '') + ', le franchisé cumule <strong>' + eurSigned(cum) + '</strong> de plus que l\'indépendant, investissement déduit, avant impôt.';
     v6.classList.add('ok');
   } else {
-    v6.innerHTML = '<strong>L\'investissement de passage n\'est pas remboursé en cinq ans</strong> dans ces hypothèses : le cumul reste à <strong>' + eurSigned(cum) + '</strong>. Il faut de meilleures conditions d\'achat, des frais de réseau plus bas ou une hausse des ventes mesurée sur le terrain.';
+    v6.innerHTML = '<strong>L\'investissement de passage n\'est pas remboursé en ' + p.duree + ' an' + (p.duree > 1 ? 's' : '') + '</strong> dans ces hypothèses : le cumul reste à <strong>' + eurSigned(cum) + '</strong>. Il faut de meilleures conditions d\'achat, des frais de réseau plus bas ou une hausse des ventes mesurée sur le terrain.';
     v6.classList.add('ko');
   }
 
