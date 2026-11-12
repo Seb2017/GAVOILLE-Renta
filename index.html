@@ -263,7 +263,7 @@
   <h1>Indépendant <em>ou</em> franchisé.<br>Lequel voyez-vous le mieux ?</h1>
   <p class="lede">En six étapes : votre magasin tel qu'il est, ce que vous payez vos montures et vos verres, ce que coûte le réseau en face, ce que change une hausse des ventes, le détail des deux comptes, puis ce que coûte le passage et en combien de temps il est remboursé. Tout se recalcule en direct.</p>
   <div class="disclaimer">
-    <strong>À lire avant utilisation.</strong> Tous les montants sont <strong>hors taxes</strong>. Chaque valeur peut être saisie au chiffre près dans sa case ou réglée avec le curseur. Le droit d'entrée, la redevance (2 %, 3 %, 4 % puis barème dégressif), l'absence de cotisation marketing et la durée de 4 ans reprennent le contrat de franchise (art. 25 et 27). Les autres valeurs par défaut (prix centrale, travaux, stock) sont des ordres de grandeur : remplacez-les par la grille tarifaire GAVOILLE et par les factures réelles du magasin. Le résultat présenté est un <strong>EBE</strong> (excédent brut d'exploitation), calculé avant rémunération du gérant, amortissements, frais financiers et impôt : ce n'est pas un résultat net comptable. La hausse des ventes de l'étape 4 est réglée à 0 % : c'est une hypothèse, à n'utiliser qu'avec des mesures terrain.
+    <strong>À lire avant utilisation.</strong> Tous les montants sont <strong>hors taxes</strong>. Chaque valeur peut être saisie au chiffre près dans sa case ou réglée avec le curseur. Le droit d'entrée, la redevance (2 %, 3 %, 4 % puis barème dégressif), l'absence de cotisation marketing et la durée de 4 ans reprennent le contrat de franchise (art. 25 et 27). Les travaux de passage d'enseigne sont fixés à 10 000 € HT. Les autres valeurs par défaut (prix centrale, stock) sont des ordres de grandeur : remplacez-les par la grille tarifaire GAVOILLE et par les factures réelles du magasin. Le résultat présenté est un <strong>EBE</strong> (excédent brut d'exploitation), calculé avant rémunération du gérant, amortissements, frais financiers et impôt : ce n'est pas un résultat net comptable. La hausse des ventes de l'étape 4 est réglée à 0 % : c'est une hypothèse, à n'utiliser qu'avec des mesures terrain.
   </div>
 
   <!-- ===== ÉTAPE 1 ===== -->
@@ -571,7 +571,8 @@
         </div>
         <div class="field gold">
           <label for="travaux">Travaux de passage d'enseigne HT (enseigne, agencement, PLV) <span class="value" id="v-travaux"></span></label>
-          <input type="range" id="travaux" min="0" max="250000" step="5000" value="40000">
+          <input type="range" id="travaux" min="0" max="250000" step="500" value="10000">
+          <div class="hint">Passage d'enseigne GAVOILLE Opticiens : 10 000 € HT.</div>
         </div>
         <div class="field gold">
           <label for="stockinit">Renouvellement initial du stock HT (net des retours) <span class="value" id="v-stockinit"></span></label>
