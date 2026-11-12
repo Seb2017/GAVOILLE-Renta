@@ -420,7 +420,7 @@
         <div class="field gold">
           <label for="franch">Mois sans redevance au démarrage <span class="value" id="v-franch"></span></label>
           <input type="range" id="franch" min="0" max="12" step="1" value="3">
-          <div class="hint">Les premiers mois de l'année 1 sont exonérés de redevance ; le taux de l'année 1 s'applique aux mois restants.</div>
+          <div class="hint">Période de lancement sans redevance. La date anniversaire du contrat part du premier paiement de redevance : l'année 1 commence à la fin de cette période.</div>
         </div>
         <div class="field gold">
           <label for="red1">Redevance année 1 (% du CA HT) <span class="value" id="v-red1"></span></label>
@@ -584,12 +584,12 @@
           <input type="range" id="stockinit" min="0" max="80000" step="1000" value="15000">
         </div>
         <div class="field gold">
-          <label for="dip">Baisse des ventes l'année du passage <span class="value" id="v-dip"></span></label>
+          <label for="dip">Baisse des ventes au démarrage (lancement et année 1) <span class="value" id="v-dip"></span></label>
           <input type="range" id="dip" min="0" max="20" step="0.5" value="5">
-          <div class="hint">Année 2 : la moitié de la hausse choisie à l'étape 4. Années suivantes : la hausse complète. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis barème.</div>
+          <div class="hint">Lancement et année 1 : cette baisse. Année 2 : la moitié de la hausse choisie à l'étape 4. Années suivantes : la hausse complète. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis barème.</div>
         </div>
         <div class="field gold">
-          <label for="duree">Durée analysée (années) <span class="value" id="v-duree"></span></label>
+          <label for="duree">Durée analysée (années de redevance, après le lancement) <span class="value" id="v-duree"></span></label>
           <input type="range" id="duree" min="1" max="10" step="1" value="4">
           <div class="hint">Contrat : 4 ans, puis reconduction tacite par périodes de 3 ans (art. 27 et 28).</div>
         </div>
@@ -602,7 +602,7 @@
 
       <div class="years-wrap">
         <table class="years">
-          <thead><tr><th>Année</th><th>Évolution des ventes</th><th>Redevance + cotisation</th><th>Écart d'EBE de l'année</th><th>Cumul, investissement déduit</th></tr></thead>
+          <thead><tr><th>Période</th><th>Évolution des ventes</th><th>Redevance + cotisation</th><th>Écart d'EBE de l'année</th><th>Cumul, investissement déduit</th></tr></thead>
           <tbody id="years-body"></tbody>
         </table>
       </div>
@@ -934,32 +934,41 @@ function compute(){
 
   // ----- Étape 6 : investissement et délai de retour -----
   $('inv-total').textContent = eur(p.invest);
-  let cum = -p.invest, payback = null, rows = '';
+  let cum = -p.invest, payback = null, rows = '', elapsed = 0;
   rows += '<tr><td>Départ</td><td>—</td><td>—</td><td>—</td><td class="' + (cum < 0 ? 'neg' : 'pos') + '">' + eurSigned(cum) + '</td></tr>';
-  for (let y = 1; y <= p.duree; y++){
-    const b = y === 1 ? -p.dip : (y === 2 ? bNow / 2 : bNow);
-    // Année 1 : redevance due seulement sur les mois qui suivent la période sans redevance
-    const payMonths = y === 1 ? 12 - p.franch : 12;
-    const rates = y <= 3 ? {red: p.ry[y-1] * payMonths / 12, cotis: p.cy[y-1]} : null;
-    const ry = calc(p, b, rates);
-    const d = ry.fRes - r0.iRes;
+  if (p.invest <= 0) payback = 0;
+  // Une ligne du tableau : écart d'EBE sur une période de `months` mois
+  function addRow(label, b, rates, months, rateTxt){
+    const rr = calc(p, b, rates);
+    const d = (rr.fRes - r0.iRes) * months / 12;
     const prev = cum;
     cum += d;
-    if (payback === null && prev < 0 && cum >= 0) payback = (y - 1) + (-prev / d);
-    if (payback === null && p.invest <= 0 && y === 1 && cum >= 0) payback = 0;
-    rows += '<tr><td>Année ' + y + '</td><td>' + pctSigned(b) + '</td><td>' + (y <= 3 && payMonths < 12 ? pctTxt(p.ry[y-1] * 100) + ' % sur ' + payMonths + ' mois' + (p.cy[y-1] > 0 ? ' + ' + pctTxt(p.cy[y-1] * 100) + ' %' : '') : pctTxt(ry.fCA > 0 ? ry.fRed / ry.fCA * 100 : 0) + ' %') + '</td>' +
+    if (payback === null && prev < 0 && cum >= 0) payback = elapsed + (-prev / d) * months / 12;
+    elapsed += months / 12;
+    rows += '<tr><td>' + label + '</td><td>' + pctSigned(b) + '</td><td>' + (rateTxt || pctTxt(rr.fCA > 0 ? rr.fRed / rr.fCA * 100 : 0) + ' %') + '</td>' +
             '<td class="' + (d >= 0 ? 'pos' : 'neg') + '">' + eurSigned(d) + '</td>' +
             '<td class="' + (cum >= 0 ? 'pos' : 'neg') + '">' + eurSigned(cum) + '</td></tr>';
+  }
+  // Période de lancement : pas de redevance ; la date anniversaire part de la fin de cette période
+  if (p.franch > 0){
+    addRow('Lancement (' + p.franch + ' mois)', -p.dip, {red: 0, cotis: p.cy[0]}, p.franch,
+           'sans redevance' + (p.cy[0] > 0 ? ' + ' + pctTxt(p.cy[0] * 100) + ' %' : ''));
+  }
+  for (let y = 1; y <= p.duree; y++){
+    const b = y === 1 ? -p.dip : (y === 2 ? bNow / 2 : bNow);
+    const rates = y <= 3 ? {red: p.ry[y-1], cotis: p.cy[y-1]} : null;
+    addRow('Année ' + y, b, rates, 12);
   }
   $('years-body').innerHTML = rows;
   const v6 = $('s6-verdict');
   v6.classList.remove('ok','ko');
   if (payback !== null){
     const yrs = payback.toLocaleString('fr-FR', {maximumFractionDigits:1});
-    v6.innerHTML = 'L\'investissement de passage (' + eur(p.invest) + ') est remboursé par l\'écart d\'EBE en <strong>' + yrs + ' an' + (Math.round(payback * 10) / 10 >= 2 ? 's' : '') + '</strong>. Sur ' + p.duree + ' an' + (p.duree > 1 ? 's' : '') + ', le franchisé cumule <strong>' + eurSigned(cum) + '</strong> de plus que l\'indépendant, investissement déduit, avant impôt.';
+    const span = (p.franch > 0 ? p.franch + ' mois de lancement et ' : '') + p.duree + ' an' + (p.duree > 1 ? 's' : '') + ' de redevance';
+    v6.innerHTML = 'L\'investissement de passage (' + eur(p.invest) + ') est remboursé par l\'écart d\'EBE en <strong>' + yrs + ' an' + (Math.round(payback * 10) / 10 >= 2 ? 's' : '') + '</strong> après le passage. Sur ' + span + ', le franchisé cumule <strong>' + eurSigned(cum) + '</strong> de plus que l\'indépendant, investissement déduit, avant impôt.';
     v6.classList.add('ok');
   } else {
-    v6.innerHTML = '<strong>L\'investissement de passage n\'est pas remboursé en ' + p.duree + ' an' + (p.duree > 1 ? 's' : '') + '</strong> dans ces hypothèses : le cumul reste à <strong>' + eurSigned(cum) + '</strong>. Il faut de meilleures conditions d\'achat, des frais de réseau plus bas ou une hausse des ventes mesurée sur le terrain.';
+    v6.innerHTML = '<strong>L\'investissement de passage n\'est pas remboursé sur ' + (p.franch > 0 ? p.franch + ' mois de lancement et ' : '') + p.duree + ' an' + (p.duree > 1 ? 's' : '') + ' de redevance</strong> dans ces hypothèses : le cumul reste à <strong>' + eurSigned(cum) + '</strong>. Il faut de meilleures conditions d\'achat, des frais de réseau plus bas ou une hausse des ventes mesurée sur le terrain.';
     v6.classList.add('ko');
   }
 
