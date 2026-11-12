@@ -227,6 +227,28 @@
   .col.f .line-item.rate .val{ color:var(--gold); }
 
   .foot-note{ margin-top:22px; font-size:12.5px; color:var(--ink-soft); line-height:1.6; }
+
+  /* ---------- Saisie exacte ---------- */
+  .entry{ display:flex; align-items:center; gap:6px; margin-bottom:6px; font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); }
+  .num{
+    width:120px; padding:5px 8px; border:1px solid var(--line-strong); border-radius:3px;
+    background:var(--paper); color:var(--teal); font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:14px;
+  }
+  .field.gold .num{ color:var(--gold); }
+  .num:focus-visible{ outline:2px solid var(--ink); outline-offset:1px; }
+  .hint{ font-size:12px; color:var(--ink-soft); margin-top:6px; line-height:1.45; }
+  .warn{ margin-top:14px; padding:10px 14px; border-left:3px solid var(--bad); background:var(--paper); font-size:13px; line-height:1.5; color:var(--ink); }
+  .warn[hidden]{ display:none; }
+
+  /* ---------- Étape 6 : investissement ---------- */
+  .years{ width:100%; border-collapse:collapse; margin-top:22px; font-size:14px; }
+  .years-wrap{ overflow-x:auto; }
+  .years th, .years td{ padding:9px 10px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+  .years th:first-child, .years td:first-child{ text-align:left; }
+  .years thead th{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:500; }
+  .years td{ font-family:'IBM Plex Mono', monospace; }
+  .years td.pos{ color:var(--good); }
+  .years td.neg{ color:var(--bad); }
 </style>
 </head>
 <body>
@@ -234,9 +256,9 @@
 
   <div class="eyebrow">GAVOILLE OPTICIENS — outil interne</div>
   <h1>Indépendant <em>ou</em> franchisé.<br>Lequel voyez-vous le mieux ?</h1>
-  <p class="lede">En cinq étapes : votre magasin tel qu'il est, ce que vous payez vos montures et vos verres, ce que coûte le réseau en face, puis ce que change une hausse de chiffre d'affaires. Tout se recalcule en direct.</p>
+  <p class="lede">En six étapes : votre magasin tel qu'il est, ce que vous payez vos montures et vos verres, ce que coûte le réseau en face, ce que change une hausse de chiffre d'affaires, le détail des deux comptes, puis ce que coûte le passage et en combien de temps il est remboursé. Tout se recalcule en direct.</p>
   <div class="disclaimer">
-    <strong>À lire avant utilisation.</strong> Les prix d'achat, la redevance et la cotisation réseau saisis par défaut sont des ordres de grandeur, pas les conditions réelles de GAVOILLE. Remplacez-les par vos vrais chiffres. La hausse de chiffre d'affaires de l'étape 4 reste une hypothèse à confirmer par des mesures terrain.
+    <strong>À lire avant utilisation.</strong> Tous les montants sont <strong>hors taxes</strong>. Chaque valeur peut être saisie au chiffre près dans sa case ou réglée avec le curseur. Les valeurs proposées par défaut (prix centrale, redevance, cotisation, droit d'entrée, travaux) sont des ordres de grandeur : remplacez-les par les conditions contractuelles GAVOILLE et par les factures réelles du magasin. Le résultat présenté est un <strong>EBE</strong> (excédent brut d'exploitation), calculé avant rémunération du gérant, amortissements, frais financiers et impôt : ce n'est pas un résultat net comptable. La hausse de chiffre d'affaires de l'étape 4 est réglée à 0 % : c'est une hypothèse, à n'utiliser qu'avec des mesures terrain.
   </div>
 
   <!-- ===== ÉTAPE 1 ===== -->
@@ -245,18 +267,19 @@
       <div class="step-num">1</div>
       <div>
         <h2 id="s1-title">Votre magasin aujourd'hui</h2>
-        <p>Les chiffres de votre point de vente en indépendant. Ils servent de base aux deux scénarios.</p>
+        <p>Les chiffres de votre point de vente en indépendant, hors taxes. Ils servent de base aux deux scénarios. Reprenez-les de votre dernier bilan.</p>
       </div>
     </div>
     <div class="card">
       <div class="fields">
         <div class="field">
-          <label for="ca">Chiffre d'affaires annuel <span class="value" id="v-ca"></span></label>
+          <label for="ca">Chiffre d'affaires annuel HT <span class="value" id="v-ca"></span></label>
           <input type="range" id="ca" min="200000" max="900000" step="10000" value="450000">
         </div>
         <div class="field">
-          <label for="charges">Charges fixes (loyer, salaires, énergie…) <span class="value" id="v-charges"></span></label>
+          <label for="charges">Charges fixes HT (loyer, salaires, énergie…) <span class="value" id="v-charges"></span></label>
           <input type="range" id="charges" min="80000" max="320000" step="5000" value="200000">
+          <div class="hint">Hors rémunération du gérant non salarié.</div>
         </div>
         <div class="field">
           <label for="volmont">Montures vendues / an <span class="value" id="v-volmont"></span></label>
@@ -267,22 +290,23 @@
           <input type="range" id="volverre" min="300" max="3000" step="50" value="1100">
         </div>
         <div class="field">
-          <label for="autres">Autres achats (LAC, accessoires, % du CA) <span class="value" id="v-autres"></span></label>
-          <input type="range" id="autres" min="0" max="20" step="1" value="10">
+          <label for="autres">Autres achats (LAC, solaires, accessoires, % du CA) <span class="value" id="v-autres"></span></label>
+          <input type="range" id="autres" min="0" max="20" step="0.5" value="10">
         </div>
         <div class="field">
-          <label for="mkt">Marketing propre / an <span class="value" id="v-mkt"></span></label>
+          <label for="mkt">Marketing propre HT / an <span class="value" id="v-mkt"></span></label>
           <input type="range" id="mkt" min="0" max="25000" step="500" value="8000">
         </div>
         <div class="field">
-          <label for="logiciel">Logiciel, gestion, formation / an <span class="value" id="v-logiciel"></span></label>
+          <label for="logiciel">Logiciel, gestion, formation HT / an <span class="value" id="v-logiciel"></span></label>
           <input type="range" id="logiciel" min="0" max="15000" step="500" value="6000">
         </div>
       </div>
       <div class="readout">
-        <span class="lbl">Votre résultat net actuel</span>
+        <span class="lbl">Votre EBE actuel</span>
         <span class="big" id="s1-res"></span>
         <span class="sub" id="s1-rate"></span>
+        <span class="sub" id="s1-mb"></span>
       </div>
     </div>
   </section>
@@ -293,7 +317,7 @@
       <div class="step-num">2</div>
       <div>
         <h2 id="s2-title">Ce que vous payez, ce que vous paieriez chez GAVOILLE</h2>
-        <p>Le prix d'achat moyen de vos montures et de vos verres aujourd'hui, face au tarif de la centrale. Reprenez les montants de vos factures.</p>
+        <p>Le prix d'achat moyen HT de vos montures et de vos verres aujourd'hui, remises déduites, face au tarif de la centrale. Reprenez les montants de vos factures.</p>
       </div>
     </div>
     <div class="card">
@@ -301,28 +325,29 @@
         <div class="buy-row">
           <h3>Montures</h3>
           <div class="field">
-            <label for="pmi">Indépendant, prix moyen / unité <span class="value" id="v-pmi"></span></label>
-            <input type="range" id="pmi" min="20" max="120" step="1" value="60">
+            <label for="pmi">Indépendant, prix moyen HT / unité <span class="value" id="v-pmi"></span></label>
+            <input type="range" id="pmi" min="10" max="150" step="1" value="60">
           </div>
           <div class="field gold">
-            <label for="pmf">Centrale GAVOILLE, prix moyen / unité <span class="value" id="v-pmf"></span></label>
-            <input type="range" id="pmf" min="20" max="120" step="1" value="46">
+            <label for="pmf">Centrale GAVOILLE, prix moyen HT / unité <span class="value" id="v-pmf"></span></label>
+            <input type="range" id="pmf" min="10" max="150" step="1" value="46">
           </div>
           <div class="buy-gap" id="gap-m"></div>
         </div>
         <div class="buy-row">
           <h3>Verres</h3>
           <div class="field">
-            <label for="pvi">Indépendant, prix moyen / paire <span class="value" id="v-pvi"></span></label>
-            <input type="range" id="pvi" min="20" max="130" step="1" value="65">
+            <label for="pvi">Indépendant, prix moyen HT / paire <span class="value" id="v-pvi"></span></label>
+            <input type="range" id="pvi" min="10" max="200" step="1" value="65">
           </div>
           <div class="field gold">
-            <label for="pvf">Centrale GAVOILLE, prix moyen / paire <span class="value" id="v-pvf"></span></label>
-            <input type="range" id="pvf" min="20" max="130" step="1" value="50">
+            <label for="pvf">Centrale GAVOILLE, prix moyen HT / paire <span class="value" id="v-pvf"></span></label>
+            <input type="range" id="pvf" min="10" max="200" step="1" value="50">
           </div>
           <div class="buy-gap" id="gap-v"></div>
         </div>
       </div>
+      <div class="warn" id="buy-warn" hidden></div>
       <div class="saving" id="saving">
         <span class="lbl" id="saving-lbl">Économie d'achat par an, à volumes identiques</span>
         <span class="big" id="saving-amt"></span>
@@ -336,36 +361,42 @@
       <div class="step-num">3</div>
       <div>
         <h2 id="s3-title">Ce que coûte le réseau en face</h2>
-        <p>Ce que le franchisé paie en retour, et le budget marketing qu'il n'a plus à porter seul. Le bilan ci-dessous est calculé à chiffre d'affaires égal.</p>
+        <p>Ce que le franchisé paie en retour, le logiciel commun du réseau, et le budget marketing qu'il n'a plus à porter seul. Le bilan ci-dessous est calculé à chiffre d'affaires égal.</p>
       </div>
     </div>
     <div class="card">
       <div class="fields">
         <div class="field gold">
-          <label for="redevance">Redevance de franchise (% du CA) <span class="value" id="v-redevance"></span></label>
-          <input type="range" id="redevance" min="0" max="10" step="0.5" value="5">
+          <label for="redevance">Redevance de franchise (% du CA HT) <span class="value" id="v-redevance"></span></label>
+          <input type="range" id="redevance" min="0" max="10" step="0.25" value="5">
         </div>
         <div class="field gold">
-          <label for="cotis">Cotisation marketing réseau (% du CA) <span class="value" id="v-cotis"></span></label>
-          <input type="range" id="cotis" min="0" max="5" step="0.5" value="2">
+          <label for="cotis">Cotisation marketing réseau (% du CA HT) <span class="value" id="v-cotis"></span></label>
+          <input type="range" id="cotis" min="0" max="5" step="0.25" value="2">
         </div>
         <div class="field gold">
           <label for="mktpart">Marketing propre restant (part du budget actuel) <span class="value" id="v-mktpart"></span></label>
           <input type="range" id="mktpart" min="0" max="100" step="5" value="40">
         </div>
         <div class="field gold">
+          <label for="logf">Logiciel réseau, gestion, formation HT / an <span class="value" id="v-logf"></span></label>
+          <input type="range" id="logf" min="0" max="20000" step="500" value="6000">
+          <div class="hint">Le logiciel est commun à tout le réseau : indiquez son coût réel pour le franchisé.</div>
+        </div>
+        <div class="field gold">
           <label for="stock">Coût annuel du stock étendu (financement + invendus) <span class="value" id="v-stock"></span></label>
-          <input type="range" id="stock" min="0" max="30000" step="500" value="6000">
+          <input type="range" id="stock" min="0" max="40000" step="500" value="6000">
         </div>
       </div>
 
       <div class="ledger">
         <div class="line-item"><span class="lbl">Économie d'achat (étape 2)</span><span class="val pos" id="l-sav"></span></div>
         <div class="line-item"><span class="lbl">Marketing propre en moins</span><span class="val pos" id="l-mkt"></span></div>
+        <div class="line-item"><span class="lbl">Logiciel / gestion : écart</span><span class="val" id="l-log"></span></div>
         <div class="line-item"><span class="lbl" id="l-red-lbl">Redevance</span><span class="val neg" id="l-red"></span></div>
         <div class="line-item"><span class="lbl" id="l-cot-lbl">Cotisation réseau</span><span class="val neg" id="l-cot"></span></div>
         <div class="line-item"><span class="lbl">Coût du stock étendu</span><span class="val neg" id="l-stock"></span></div>
-        <div class="line-item result"><span class="lbl">Écart franchisé − indépendant, à CA égal</span><span class="val" id="l-net"></span></div>
+        <div class="line-item result"><span class="lbl">Écart d'EBE franchisé − indépendant, à CA égal</span><span class="val" id="l-net"></span></div>
       </div>
       <div class="verdict" id="s3-verdict"></div>
     </div>
@@ -377,16 +408,16 @@
       <div class="step-num">4</div>
       <div>
         <h2 id="s4-title">Et si, en plus, le chiffre d'affaires progresse…</h2>
-        <p>150 marques, stock profond, visibilité du réseau : faites glisser pour tester une hausse de 0 % à 20 %. Les volumes de montures et de verres suivent le chiffre d'affaires.</p>
+        <p>150 marques, stock profond, visibilité du réseau : faites glisser pour tester une hausse de 0 % à 20 %, une fois le magasin installé sous l'enseigne. Les volumes de montures et de verres suivent le chiffre d'affaires ; les charges fixes ne bougent pas, ce qui devient optimiste au-delà d'environ +10 %.</p>
       </div>
     </div>
     <div class="card">
       <div class="boost-readout">
-        <div class="boost-big">+<span id="boost-val">8</span><small>% de CA</small></div>
+        <div class="boost-big">+<span id="boost-val">0</span><small>% de CA</small></div>
         <div class="boost-ca" id="boost-ca"></div>
       </div>
 
-      <input type="range" class="boost" id="boost" min="0" max="20" step="0.5" value="8" aria-label="Hausse du chiffre d'affaires en pourcentage">
+      <input type="range" class="boost" id="boost" min="0" max="20" step="0.5" value="0" aria-label="Hausse du chiffre d'affaires en pourcentage">
       <div class="ticks" id="ticks"></div>
       <div class="legend-zones">
         <span><i class="r"></i>Le franchisé est derrière l'indépendant</span>
@@ -395,7 +426,7 @@
 
       <div class="results">
         <div class="rcard i">
-          <div class="tag">Indépendant — résultat net / an</div>
+          <div class="tag">Indépendant — EBE / an</div>
           <div class="amount" id="r-i-amt"></div>
           <div class="rate" id="r-i-rate"></div>
         </div>
@@ -404,7 +435,7 @@
           <div class="d-value" id="delta-value">—</div>
         </div>
         <div class="rcard f">
-          <div class="tag">Franchisé GAVOILLE — résultat net / an</div>
+          <div class="tag">Franchisé GAVOILLE — EBE / an</div>
           <div class="amount" id="r-f-amt"></div>
           <div class="rate" id="r-f-rate"></div>
         </div>
@@ -413,8 +444,8 @@
       <div class="verdict" id="verdict"></div>
 
       <div class="chart-wrap">
-        <p class="chart-title">Résultat net selon la hausse de CA</p>
-        <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Courbe du résultat net du franchisé selon la hausse de chiffre d'affaires, comparée à celui de l'indépendant"></svg>
+        <p class="chart-title">EBE selon la hausse de CA</p>
+        <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Courbe de l'EBE du franchisé selon la hausse de chiffre d'affaires, comparée à celui de l'indépendant"></svg>
         <div class="chart-legend">
           <span><i class="sw i"></i>Indépendant (inchangé)</span>
           <span><i class="sw f"></i>Franchisé GAVOILLE</span>
@@ -429,14 +460,14 @@
     <div class="step-head">
       <div class="step-num">5</div>
       <div>
-        <h2 id="s5-title">Le compte de résultat en détail</h2>
-        <p>Les deux comptes côte à côte, au niveau de hausse choisi à l'étape 4.</p>
+        <h2 id="s5-title">Les deux comptes en détail</h2>
+        <p>Les deux comptes côte à côte, hors taxes, au niveau de hausse choisi à l'étape 4.</p>
       </div>
     </div>
     <div class="pl">
       <div class="col i">
         <h3>Indépendant</h3>
-        <div class="line-item"><span class="lbl">Chiffre d'affaires</span><span class="val" id="i-ca"></span></div>
+        <div class="line-item"><span class="lbl">Chiffre d'affaires HT</span><span class="val" id="i-ca"></span></div>
         <div class="line-item sub"><span class="lbl" id="i-lbl-m">− Achat montures</span><span class="val" id="i-cm"></span></div>
         <div class="line-item sub"><span class="lbl" id="i-lbl-v">− Achat verres</span><span class="val" id="i-cv"></span></div>
         <div class="line-item sub"><span class="lbl">− Autres achats</span><span class="val" id="i-aut"></span></div>
@@ -444,44 +475,122 @@
         <div class="line-item sub"><span class="lbl">− Charges fixes</span><span class="val" id="i-charges"></span></div>
         <div class="line-item sub"><span class="lbl">− Marketing propre</span><span class="val" id="i-mkt"></span></div>
         <div class="line-item sub"><span class="lbl">− Logiciel / gestion</span><span class="val" id="i-log"></span></div>
-        <div class="line-item result"><span class="lbl">Résultat net</span><span class="val" id="i-res"></span></div>
-        <div class="line-item rate"><span class="lbl">Taux de rentabilité</span><span class="val" id="i-taux"></span></div>
+        <div class="line-item result"><span class="lbl">EBE</span><span class="val" id="i-res"></span></div>
+        <div class="line-item rate"><span class="lbl">Taux de marge brute</span><span class="val" id="i-tmb"></span></div>
+        <div class="line-item rate"><span class="lbl">EBE / CA</span><span class="val" id="i-taux"></span></div>
       </div>
       <div class="col f">
         <h3>Franchisé GAVOILLE</h3>
-        <div class="line-item"><span class="lbl">Chiffre d'affaires</span><span class="val" id="f-ca"></span></div>
+        <div class="line-item"><span class="lbl">Chiffre d'affaires HT</span><span class="val" id="f-ca"></span></div>
         <div class="line-item sub"><span class="lbl" id="f-lbl-m">− Achat montures (centrale)</span><span class="val" id="f-cm"></span></div>
         <div class="line-item sub"><span class="lbl" id="f-lbl-v">− Achat verres (centrale)</span><span class="val" id="f-cv"></span></div>
         <div class="line-item sub"><span class="lbl">− Autres achats</span><span class="val" id="f-aut"></span></div>
         <div class="line-item"><span class="lbl">Marge brute</span><span class="val" id="f-marge"></span></div>
         <div class="line-item sub"><span class="lbl">− Charges fixes</span><span class="val" id="f-charges"></span></div>
         <div class="line-item sub"><span class="lbl">− Marketing propre restant</span><span class="val" id="f-mkt"></span></div>
-        <div class="line-item sub"><span class="lbl">− Logiciel / gestion</span><span class="val" id="f-log"></span></div>
+        <div class="line-item sub"><span class="lbl">− Logiciel réseau / gestion</span><span class="val" id="f-log"></span></div>
         <div class="line-item sub"><span class="lbl">− Redevance + cotisation réseau</span><span class="val" id="f-red"></span></div>
         <div class="line-item sub"><span class="lbl">− Coût du stock étendu</span><span class="val" id="f-stock"></span></div>
-        <div class="line-item result"><span class="lbl">Résultat net</span><span class="val" id="f-res"></span></div>
-        <div class="line-item rate"><span class="lbl">Taux de rentabilité</span><span class="val" id="f-taux"></span></div>
+        <div class="line-item result"><span class="lbl">EBE</span><span class="val" id="f-res"></span></div>
+        <div class="line-item rate"><span class="lbl">Taux de marge brute</span><span class="val" id="f-tmb"></span></div>
+        <div class="line-item rate"><span class="lbl">EBE / CA</span><span class="val" id="f-taux"></span></div>
       </div>
     </div>
   </section>
 
-  <p class="foot-note">Hypothèses de calcul : les volumes de montures et de verres augmentent proportionnellement au CA dans le scénario franchisé (donc le coût d'achat aussi) ; les charges fixes restent identiques. Le modèle ignore la fiscalité, l'éventuel droit d'entrée, la rémunération du gérant et l'effet d'un prix de vente différent. Il sert à rendre un raisonnement lisible, pas à remplacer une étude prévisionnelle chiffrée.</p>
+  <!-- ===== ÉTAPE 6 ===== -->
+  <section class="step" aria-labelledby="s6-title">
+    <div class="step-head">
+      <div class="step-num">6</div>
+      <div>
+        <h2 id="s6-title">Ce que coûte le passage, et quand il est remboursé</h2>
+        <p>Le passage sous l'enseigne demande un investissement de départ, et la première année est souvent perturbée (travaux, nouvelle enseigne que la clientèle doit reconnaître). Le tableau suit l'écart d'EBE année par année sur cinq ans.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="fields">
+        <div class="field gold">
+          <label for="droit">Droit d'entrée HT <span class="value" id="v-droit"></span></label>
+          <input type="range" id="droit" min="0" max="60000" step="1000" value="15000">
+        </div>
+        <div class="field gold">
+          <label for="travaux">Travaux de passage d'enseigne HT (enseigne, agencement, PLV) <span class="value" id="v-travaux"></span></label>
+          <input type="range" id="travaux" min="0" max="250000" step="5000" value="40000">
+        </div>
+        <div class="field gold">
+          <label for="stockinit">Renouvellement initial du stock HT (net des retours) <span class="value" id="v-stockinit"></span></label>
+          <input type="range" id="stockinit" min="0" max="80000" step="1000" value="15000">
+        </div>
+        <div class="field gold">
+          <label for="dip">Baisse de CA l'année du passage <span class="value" id="v-dip"></span></label>
+          <input type="range" id="dip" min="0" max="20" step="0.5" value="5">
+          <div class="hint">Année 2 : la moitié de la hausse choisie à l'étape 4. Années 3 à 5 : la hausse complète.</div>
+        </div>
+      </div>
+
+      <div class="readout">
+        <span class="lbl">Investissement de passage</span>
+        <span class="big" id="inv-total"></span>
+      </div>
+
+      <div class="years-wrap">
+        <table class="years">
+          <thead><tr><th>Année</th><th>Évolution du CA</th><th>Écart d'EBE de l'année</th><th>Cumul, investissement déduit</th></tr></thead>
+          <tbody id="years-body"></tbody>
+        </table>
+      </div>
+      <div class="verdict" id="s6-verdict"></div>
+    </div>
+  </section>
+
+  <p class="foot-note">Hypothèses de calcul : tous les montants sont hors taxes. Les volumes de montures et de verres évoluent proportionnellement au CA dans le scénario franchisé (donc le coût d'achat aussi) ; les charges fixes restent identiques. L'EBE est calculé avant rémunération du gérant non salarié, amortissements, frais financiers et impôt. Le délai de retour de l'étape 6 rapporte l'investissement aux écarts d'EBE, sans actualisation ni fiscalité. Le modèle ignore l'effet d'un prix de vente ou d'un mix différent (offres réseau, 100 % Santé, réseaux de soins) et la durée d'engagement du contrat. Il sert à rendre un raisonnement lisible, pas à remplacer un prévisionnel établi par un expert-comptable.</p>
 
 </div>
 
 <script>
 const nf = new Intl.NumberFormat('fr-FR', {maximumFractionDigits:0});
 const eur = n => nf.format(Math.round(n)) + ' €';
+const eurU = n => n.toLocaleString('fr-FR', {maximumFractionDigits:2}) + ' €';
+const eurUSigned = n => (n >= 0 ? '+' : '−') + eurU(Math.abs(n));
 const eurSigned = n => (Math.round(n) >= 0 ? '+' : '−') + nf.format(Math.abs(Math.round(n))) + ' €';
 const pct = n => n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' %';
-const pctTxt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:1});
-const MIN_B = 0, MAX_B = 20;
-
-const ids = ['boost','ca','charges','autres','mkt','logiciel','volmont','volverre',
-             'pmi','pvi','pmf','pvf','redevance','cotis','mktpart','stock'];
-const el = {};
-ids.forEach(id => el[id] = document.getElementById(id));
+const pctTxt = n => n.toLocaleString('fr-FR', {maximumFractionDigits:2});
+const pctSigned = n => (n > 0 ? '+' : n < 0 ? '−' : '') + pctTxt(Math.abs(n)) + ' %';
+const MIN_B = 0, MAX_B = 20, YEARS = 5;
 const $ = id => document.getElementById(id);
+
+// Champs saisissables : curseur + case de saisie exacte
+const UNITS = {
+  ca:'€', charges:'€', volmont:'unités', volverre:'paires', autres:'%', mkt:'€', logiciel:'€',
+  pmi:'€', pmf:'€', pvi:'€', pvf:'€',
+  redevance:'%', cotis:'%', mktpart:'%', logf:'€', stock:'€',
+  droit:'€', travaux:'€', stockinit:'€', dip:'%'
+};
+const vals = {};
+Object.keys(UNITS).forEach(id => {
+  const r = $(id);
+  const span = $('v-' + id);
+  const label = span.closest('label');
+  span.remove();
+  vals[id] = +r.value;
+  const wrap = document.createElement('div');
+  wrap.className = 'entry';
+  const n = document.createElement('input');
+  n.type = 'number'; n.className = 'num'; n.id = 'n-' + id;
+  n.min = (id === 'dip') ? '0' : r.min; n.step = 'any'; n.value = r.value; n.inputMode = 'decimal';
+  n.setAttribute('aria-label', label.textContent.trim() + ' (saisie exacte)');
+  wrap.appendChild(n);
+  wrap.appendChild(document.createTextNode(UNITS[id]));
+  r.before(wrap);
+  r.addEventListener('input', () => { vals[id] = +r.value; n.value = r.value; compute(); });
+  n.addEventListener('input', () => {
+    const v = parseFloat(String(n.value).replace(',', '.'));
+    if (!isFinite(v)) return;
+    vals[id] = v; r.value = v; compute();
+  });
+});
+const boostEl = $('boost');
+boostEl.addEventListener('input', compute);
 
 // graduations sous la réglette
 (function buildTicks(){
@@ -497,58 +606,43 @@ const $ = id => document.getElementById(id);
 })();
 
 function getParams(){
+  const v = vals;
   return {
-    ca: +el.ca.value, charges: +el.charges.value, autres: +el.autres.value / 100,
-    mkt: +el.mkt.value, logiciel: +el.logiciel.value,
-    vm: +el.volmont.value, vv: +el.volverre.value,
-    pmi: +el.pmi.value, pvi: +el.pvi.value, pmf: +el.pmf.value, pvf: +el.pvf.value,
-    red: +el.redevance.value / 100, cotis: +el.cotis.value / 100,
-    mktPart: +el.mktpart.value / 100, stock: +el.stock.value
+    ca: v.ca, charges: v.charges, autres: v.autres / 100,
+    mkt: v.mkt, logiciel: v.logiciel, logF: v.logf,
+    vm: v.volmont, vv: v.volverre,
+    pmi: v.pmi, pvi: v.pvi, pmf: v.pmf, pvf: v.pvf,
+    red: v.redevance / 100, cotis: v.cotis / 100,
+    mktPart: v.mktpart / 100, stock: v.stock,
+    invest: v.droit + v.travaux + v.stockinit, dip: v.dip
   };
 }
 
+// bPct : évolution du CA du franchisé par rapport au magasin actuel (peut être négative)
 function calc(p, bPct){
   const g = 1 + bPct / 100;
   // Indépendant (référence, inchangé)
   const iCM = p.vm * p.pmi, iCV = p.vv * p.pvi, iAut = p.ca * p.autres;
   const iMarge = p.ca - iCM - iCV - iAut;
   const iRes = iMarge - p.charges - p.mkt - p.logiciel;
-  // Franchisé : CA et volumes montent ensemble
+  // Franchisé : CA et volumes évoluent ensemble
   const fCA = p.ca * g;
   const fVM = p.vm * g, fVV = p.vv * g;
   const fCM = fVM * p.pmf, fCV = fVV * p.pvf, fAut = fCA * p.autres;
   const fMarge = fCA - fCM - fCV - fAut;
   const fMkt = p.mkt * p.mktPart;
   const fRed = fCA * (p.red + p.cotis);
-  const fRes = fMarge - p.charges - fMkt - p.logiciel - fRed - p.stock;
+  const fRes = fMarge - p.charges - fMkt - p.logF - fRed - p.stock;
   return {iCM,iCV,iAut,iMarge,iRes, fCA,fVM,fVV,fCM,fCV,fAut,fMarge,fMkt,fRed,fRes};
 }
 
-// Seuil de bascule : hausse de CA (%) pour laquelle franchisé = indépendant
+// Seuil de bascule : hausse de CA (%) pour laquelle l'EBE du franchisé = celui de l'indépendant
 function breakEven(p){
   const iRes = calc(p, 0).iRes;
   const K = p.ca * (1 - p.autres - p.red - p.cotis) - (p.vm * p.pmf + p.vv * p.pvf);
-  const fixedF = p.charges + p.mkt * p.mktPart + p.logiciel + p.stock;
+  const fixedF = p.charges + p.mkt * p.mktPart + p.logF + p.stock;
   if (K <= 0) return {never:true};
   return {never:false, b: ((iRes + fixedF) / K - 1) * 100};
-}
-
-function updateLabels(){
-  $('v-ca').textContent = eur(+el.ca.value);
-  $('v-charges').textContent = eur(+el.charges.value);
-  $('v-autres').textContent = el.autres.value + ' %';
-  $('v-mkt').textContent = eur(+el.mkt.value);
-  $('v-logiciel').textContent = eur(+el.logiciel.value);
-  $('v-volmont').textContent = nf.format(+el.volmont.value) + ' unités';
-  $('v-volverre').textContent = nf.format(+el.volverre.value) + ' paires';
-  $('v-pmi').textContent = eur(+el.pmi.value);
-  $('v-pvi').textContent = eur(+el.pvi.value);
-  $('v-pmf').textContent = eur(+el.pmf.value);
-  $('v-pvf').textContent = eur(+el.pvf.value);
-  $('v-redevance').textContent = pctTxt(+el.redevance.value) + ' %';
-  $('v-cotis').textContent = pctTxt(+el.cotis.value) + ' %';
-  $('v-mktpart').textContent = el.mktpart.value + ' %';
-  $('v-stock').textContent = eur(+el.stock.value);
 }
 
 function drawChart(p, bNow, be){
@@ -593,7 +687,7 @@ function drawChart(p, bNow, be){
 
 function compute(){
   const p = getParams();
-  const bNow = +el.boost.value;
+  const bNow = +boostEl.value;
   const r = calc(p, bNow);
   const r0 = calc(p, 0);
   const be = breakEven(p);
@@ -601,25 +695,40 @@ function compute(){
   // ----- Étape 1 -----
   $('s1-res').textContent = eur(r0.iRes);
   $('s1-rate').textContent = pct(r0.iRes / p.ca * 100) + ' du CA';
+  $('s1-mb').textContent = 'marge brute ' + pct(r0.iMarge / p.ca * 100);
 
   // ----- Étape 2 -----
   const dM = p.pmi - p.pmf, dV = p.pvi - p.pvf;
   const savM = p.vm * dM, savV = p.vv * dV, sav = savM + savV;
-  $('gap-m').innerHTML = 'Écart : <strong>' + eurSigned(dM) + '</strong> par monture × ' + nf.format(p.vm) + ' = <strong>' + eurSigned(savM) + '</strong> / an';
-  $('gap-v').innerHTML = 'Écart : <strong>' + eurSigned(dV) + '</strong> par paire × ' + nf.format(p.vv) + ' = <strong>' + eurSigned(savV) + '</strong> / an';
+  const rM = p.pmi > 0 ? dM / p.pmi * 100 : 0, rV = p.pvi > 0 ? dV / p.pvi * 100 : 0;
+  $('gap-m').innerHTML = 'Écart : <strong>' + eurUSigned(dM) + '</strong> par monture (' + pctSigned(-rM) + ') × ' + nf.format(p.vm) + ' = <strong>' + eurSigned(savM) + '</strong> / an';
+  $('gap-v').innerHTML = 'Écart : <strong>' + eurUSigned(dV) + '</strong> par paire (' + pctSigned(-rV) + ') × ' + nf.format(p.vv) + ' = <strong>' + eurSigned(savV) + '</strong> / an';
   $('saving-amt').textContent = eurSigned(sav);
   $('saving').classList.toggle('neg', sav < 0);
   $('saving-lbl').textContent = sav >= 0
     ? 'Économie d\'achat par an, à volumes identiques'
     : 'Surcoût d\'achat par an, à volumes identiques';
+  const warn = $('buy-warn');
+  const big = [];
+  if (rM > 15) big.push('montures (−' + Math.round(rM) + ' %)');
+  if (rV > 15) big.push('verres (−' + Math.round(rV) + ' %)');
+  if (big.length){
+    warn.hidden = false;
+    warn.innerHTML = '<strong>Écart d\'achat élevé sur les ' + big.join(' et les ') + '.</strong> C\'est possible, mais un candidat déjà adhérent d\'une centrale ou d\'un groupement le contestera : appuyez ce chiffre sur la grille tarifaire GAVOILLE et sur ses propres factures.';
+  } else {
+    warn.hidden = true;
+  }
 
   // ----- Étape 3 : bilan à CA égal -----
   const mktSaved = p.mkt * (1 - p.mktPart);
+  const logDiff = p.logiciel - p.logF;
   const redAmt = p.ca * p.red, cotAmt = p.ca * p.cotis;
-  const net0 = r0.fRes - r0.iRes; // = sav + mktSaved - redAmt - cotAmt - stock
+  const net0 = r0.fRes - r0.iRes; // = sav + mktSaved + logDiff - redAmt - cotAmt - stock
   $('l-sav').textContent = eurSigned(sav);
   $('l-sav').className = 'val ' + (sav >= 0 ? 'pos' : 'neg');
   $('l-mkt').textContent = eurSigned(mktSaved);
+  $('l-log').textContent = eurSigned(logDiff);
+  $('l-log').className = 'val ' + (logDiff > 0 ? 'pos' : logDiff < 0 ? 'neg' : '');
   $('l-red-lbl').textContent = 'Redevance (' + pctTxt(p.red * 100) + ' % de ' + eur(p.ca) + ')';
   $('l-red').textContent = eurSigned(-redAmt);
   $('l-cot-lbl').textContent = 'Cotisation réseau (' + pctTxt(p.cotis * 100) + ' % de ' + eur(p.ca) + ')';
@@ -630,24 +739,25 @@ function compute(){
 
   const v3 = $('s3-verdict');
   v3.classList.remove('ok','ko');
-  const networkCost = redAmt + cotAmt + p.stock;
+  const gains = Math.max(0, sav) + mktSaved + Math.max(0, logDiff);
+  const networkCost = redAmt + cotAmt + p.stock + Math.max(0, -logDiff) + Math.max(0, -sav);
   if (net0 >= 0){
-    v3.innerHTML = '<strong>Le réseau est déjà remboursé par vos achats.</strong> À chiffre d\'affaires égal, le franchisé gagne <strong>' + eurSigned(net0) + '</strong> de plus par an. Toute hausse de chiffre d\'affaires vient en plus.';
+    v3.innerHTML = '<strong>Le réseau est déjà remboursé par vos achats.</strong> À chiffre d\'affaires égal, l\'EBE du franchisé dépasse celui de l\'indépendant de <strong>' + eurSigned(net0) + '</strong> par an. Toute hausse de chiffre d\'affaires vient en plus.';
     v3.classList.add('ok');
   } else {
-    const cover = networkCost > 0 ? Math.max(0, (sav + mktSaved) / networkCost * 100) : 0;
+    const cover = networkCost > 0 ? Math.max(0, gains / networkCost * 100) : 0;
     v3.innerHTML = 'À chiffre d\'affaires égal, les économies couvrent <strong>' + Math.round(cover) + ' %</strong> du coût du réseau. Il manque <strong>' + eur(-net0) + '</strong> par an : c\'est la hausse de chiffre d\'affaires (étape 4) qui doit faire la différence.';
     v3.classList.add('ko');
   }
 
   // ----- Étape 4 -----
   $('boost-val').textContent = bNow.toLocaleString('fr-FR', {minimumFractionDigits: (bNow % 1 ? 1 : 0), maximumFractionDigits:1});
-  $('boost-ca').textContent = eur(p.ca) + '  →  ' + eur(r.fCA) + ' de CA';
+  $('boost-ca').textContent = eur(p.ca) + '  →  ' + eur(r.fCA) + ' de CA HT';
 
   let split;
   if (be.never) split = 100;
   else split = Math.max(0, Math.min(100, (be.b - MIN_B) / (MAX_B - MIN_B) * 100));
-  el.boost.style.setProperty('--split', split + '%');
+  boostEl.style.setProperty('--split', split + '%');
 
   $('r-i-amt').textContent = eur(r.iRes);
   $('r-i-rate').textContent = pct(r.iRes / p.ca * 100) + ' du CA';
@@ -668,7 +778,7 @@ function compute(){
     txt = '<strong>Dans ces hypothèses, le franchisé ne rattrape jamais l\'indépendant :</strong> redevance, cotisation et coût d\'achat absorbent plus que la marge de chaque euro de CA supplémentaire. Revoyez les prix d\'achat ou les conditions du réseau.';
     v.classList.add('ko');
   } else if (be.b <= 0){
-    txt = '<strong>Le franchisé est devant dès 0 % de hausse.</strong> À ' + bTxt + ' de CA, l\'écart atteint <strong>' + eurSigned(delta) + '</strong> par an.';
+    txt = '<strong>Le franchisé est devant dès 0 % de hausse.</strong> À ' + bTxt + ' de CA, l\'écart d\'EBE atteint <strong>' + eurSigned(delta) + '</strong> par an.';
     v.classList.add('ok');
   } else if (be.b > MAX_B){
     txt = 'Il faudrait <strong>+' + be.b.toFixed(1).replace('.',',') + ' % de CA</strong>, au-delà de la plage de la réglette, pour que le franchisé rattrape l\'indépendant.';
@@ -679,12 +789,13 @@ function compute(){
           (ahead ? 'À ' + bTxt + ', il est devant.' : 'À ' + bTxt + ', il est encore derrière.');
     v.classList.add(ahead ? 'ok' : 'ko');
   }
+  if (bNow > 10) txt += ' <br>Au-delà de +10 %, garder les charges fixes constantes est optimiste : prévoyez du temps d\'opticien en plus dans les charges.';
   v.innerHTML = txt;
 
-  // ----- Étape 5 : P&L -----
+  // ----- Étape 5 : comptes -----
   $('i-ca').textContent = eur(p.ca);
-  $('i-lbl-m').textContent = '− Achat montures (' + nf.format(p.vm) + ' × ' + eur(p.pmi) + ')';
-  $('i-lbl-v').textContent = '− Achat verres (' + nf.format(p.vv) + ' × ' + eur(p.pvi) + ')';
+  $('i-lbl-m').textContent = '− Achat montures (' + nf.format(p.vm) + ' × ' + eurU(p.pmi) + ')';
+  $('i-lbl-v').textContent = '− Achat verres (' + nf.format(p.vv) + ' × ' + eurU(p.pvi) + ')';
   $('i-cm').textContent = '− ' + eur(r.iCM);
   $('i-cv').textContent = '− ' + eur(r.iCV);
   $('i-aut').textContent = '− ' + eur(r.iAut);
@@ -693,28 +804,55 @@ function compute(){
   $('i-mkt').textContent = '− ' + eur(p.mkt);
   $('i-log').textContent = '− ' + eur(p.logiciel);
   $('i-res').textContent = eur(r.iRes);
+  $('i-tmb').textContent = pct(r.iMarge / p.ca * 100);
   $('i-taux').textContent = pct(r.iRes / p.ca * 100);
 
   $('f-ca').textContent = eur(r.fCA);
-  $('f-lbl-m').textContent = '− Achat montures (' + nf.format(r.fVM) + ' × ' + eur(p.pmf) + ')';
-  $('f-lbl-v').textContent = '− Achat verres (' + nf.format(r.fVV) + ' × ' + eur(p.pvf) + ')';
+  $('f-lbl-m').textContent = '− Achat montures (' + nf.format(r.fVM) + ' × ' + eurU(p.pmf) + ')';
+  $('f-lbl-v').textContent = '− Achat verres (' + nf.format(r.fVV) + ' × ' + eurU(p.pvf) + ')';
   $('f-cm').textContent = '− ' + eur(r.fCM);
   $('f-cv').textContent = '− ' + eur(r.fCV);
   $('f-aut').textContent = '− ' + eur(r.fAut);
   $('f-marge').textContent = eur(r.fMarge);
   $('f-charges').textContent = '− ' + eur(p.charges);
   $('f-mkt').textContent = '− ' + eur(r.fMkt);
-  $('f-log').textContent = '− ' + eur(p.logiciel);
+  $('f-log').textContent = '− ' + eur(p.logF);
   $('f-red').textContent = '− ' + eur(r.fRed);
   $('f-stock').textContent = '− ' + eur(p.stock);
   $('f-res').textContent = eur(r.fRes);
+  $('f-tmb').textContent = pct(r.fMarge / r.fCA * 100);
   $('f-taux').textContent = pct(r.fRes / r.fCA * 100);
 
+  // ----- Étape 6 : investissement et délai de retour -----
+  $('inv-total').textContent = eur(p.invest);
+  let cum = -p.invest, payback = null, rows = '';
+  rows += '<tr><td>Départ</td><td>—</td><td>—</td><td class="' + (cum < 0 ? 'neg' : 'pos') + '">' + eurSigned(cum) + '</td></tr>';
+  for (let y = 1; y <= YEARS; y++){
+    const b = y === 1 ? -p.dip : (y === 2 ? bNow / 2 : bNow);
+    const d = calc(p, b).fRes - r0.iRes;
+    const prev = cum;
+    cum += d;
+    if (payback === null && prev < 0 && cum >= 0) payback = (y - 1) + (-prev / d);
+    if (payback === null && p.invest <= 0 && y === 1 && cum >= 0) payback = 0;
+    rows += '<tr><td>Année ' + y + '</td><td>' + pctSigned(b) + '</td>' +
+            '<td class="' + (d >= 0 ? 'pos' : 'neg') + '">' + eurSigned(d) + '</td>' +
+            '<td class="' + (cum >= 0 ? 'pos' : 'neg') + '">' + eurSigned(cum) + '</td></tr>';
+  }
+  $('years-body').innerHTML = rows;
+  const v6 = $('s6-verdict');
+  v6.classList.remove('ok','ko');
+  if (payback !== null){
+    const yrs = payback.toLocaleString('fr-FR', {maximumFractionDigits:1});
+    v6.innerHTML = 'L\'investissement de passage (' + eur(p.invest) + ') est remboursé par l\'écart d\'EBE en <strong>' + yrs + ' an' + (payback >= 2 ? 's' : '') + '</strong>. Sur cinq ans, le franchisé cumule <strong>' + eurSigned(cum) + '</strong> de plus que l\'indépendant, investissement déduit, avant impôt.';
+    v6.classList.add('ok');
+  } else {
+    v6.innerHTML = '<strong>L\'investissement de passage n\'est pas remboursé en cinq ans</strong> dans ces hypothèses : le cumul reste à <strong>' + eurSigned(cum) + '</strong>. Il faut de meilleures conditions d\'achat, des frais de réseau plus bas ou une hausse de chiffre d\'affaires mesurée sur le terrain.';
+    v6.classList.add('ko');
+  }
+
   drawChart(p, bNow, be);
-  updateLabels();
 }
 
-ids.forEach(id => el[id].addEventListener('input', compute));
 compute();
 </script>
 </body>
