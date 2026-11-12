@@ -365,17 +365,17 @@
       <div class="step-num">3</div>
       <div>
         <h2 id="s3-title">Ce que coûte le réseau en face</h2>
-        <p>Ce que le franchisé paie en retour, le logiciel commun du réseau, et le budget marketing qu'il n'a plus à porter seul. Le bilan ci-dessous est calculé à volumes de ventes égaux.</p>
+        <p>Ce que le franchisé paie en retour, le logiciel commun du réseau, et le budget marketing qu'il n'a plus à porter seul. Les taux de redevance et de cotisation montent progressivement les trois premières années : le bilan ci-dessous est calculé au taux plein (année 4 et suivantes), à volumes de ventes égaux. Les taux réduits sont pris en compte année par année à l'étape 6.</p>
       </div>
     </div>
     <div class="card">
       <div class="fields">
         <div class="field gold">
-          <label for="redevance">Redevance de franchise (% du CA HT) <span class="value" id="v-redevance"></span></label>
+          <label for="redevance">Redevance de franchise, taux plein (% du CA HT) <span class="value" id="v-redevance"></span></label>
           <input type="range" id="redevance" min="0" max="10" step="0.25" value="5">
         </div>
         <div class="field gold">
-          <label for="cotis">Cotisation marketing réseau (% du CA HT) <span class="value" id="v-cotis"></span></label>
+          <label for="cotis">Cotisation marketing réseau, taux plein (% du CA HT) <span class="value" id="v-cotis"></span></label>
           <input type="range" id="cotis" min="0" max="5" step="0.25" value="2">
         </div>
         <div class="field gold">
@@ -396,6 +396,31 @@
           <label for="stock">Coût annuel du stock étendu (financement + invendus) <span class="value" id="v-stock"></span></label>
           <input type="range" id="stock" min="0" max="40000" step="500" value="6000">
         </div>
+        <div class="grp-title f">Montée progressive des taux — années 1 à 3</div>
+        <div class="field gold">
+          <label for="red1">Redevance année 1 (% du CA HT) <span class="value" id="v-red1"></span></label>
+          <input type="range" id="red1" min="0" max="10" step="0.25" value="2">
+        </div>
+        <div class="field gold">
+          <label for="cot1">Cotisation année 1 (% du CA HT) <span class="value" id="v-cot1"></span></label>
+          <input type="range" id="cot1" min="0" max="5" step="0.25" value="1">
+        </div>
+        <div class="field gold">
+          <label for="red2">Redevance année 2 (% du CA HT) <span class="value" id="v-red2"></span></label>
+          <input type="range" id="red2" min="0" max="10" step="0.25" value="3">
+        </div>
+        <div class="field gold">
+          <label for="cot2">Cotisation année 2 (% du CA HT) <span class="value" id="v-cot2"></span></label>
+          <input type="range" id="cot2" min="0" max="5" step="0.25" value="1.5">
+        </div>
+        <div class="field gold">
+          <label for="red3">Redevance année 3 (% du CA HT) <span class="value" id="v-red3"></span></label>
+          <input type="range" id="red3" min="0" max="10" step="0.25" value="4">
+        </div>
+        <div class="field gold">
+          <label for="cot3">Cotisation année 3 (% du CA HT) <span class="value" id="v-cot3"></span></label>
+          <input type="range" id="cot3" min="0" max="5" step="0.25" value="2">
+        </div>
       </div>
 
       <div class="ledger">
@@ -406,7 +431,7 @@
         <div class="line-item"><span class="lbl" id="l-red-lbl">Redevance</span><span class="val neg" id="l-red"></span></div>
         <div class="line-item"><span class="lbl" id="l-cot-lbl">Cotisation réseau</span><span class="val neg" id="l-cot"></span></div>
         <div class="line-item"><span class="lbl">Coût du stock étendu</span><span class="val neg" id="l-stock"></span></div>
-        <div class="line-item result"><span class="lbl">Écart d'EBE franchisé − indépendant, à volumes égaux</span><span class="val" id="l-net"></span></div>
+        <div class="line-item result"><span class="lbl">Écart d'EBE franchisé − indépendant, à volumes égaux, au taux plein</span><span class="val" id="l-net"></span></div>
       </div>
       <div class="verdict" id="s3-verdict"></div>
     </div>
@@ -471,7 +496,7 @@
       <div class="step-num">5</div>
       <div>
         <h2 id="s5-title">Les deux comptes en détail</h2>
-        <p>Les deux comptes côte à côte, hors taxes, au niveau de hausse choisi à l'étape 4.</p>
+        <p>Les deux comptes côte à côte, hors taxes, au niveau de hausse choisi à l'étape 4, avec la redevance et la cotisation au taux plein (année 4 et suivantes).</p>
       </div>
     </div>
     <div class="pl">
@@ -534,7 +559,7 @@
         <div class="field gold">
           <label for="dip">Baisse des ventes l'année du passage <span class="value" id="v-dip"></span></label>
           <input type="range" id="dip" min="0" max="20" step="0.5" value="5">
-          <div class="hint">Année 2 : la moitié de la hausse choisie à l'étape 4. Années 3 à 5 : la hausse complète.</div>
+          <div class="hint">Année 2 : la moitié de la hausse choisie à l'étape 4. Années 3 à 5 : la hausse complète. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis taux plein.</div>
         </div>
       </div>
 
@@ -545,7 +570,7 @@
 
       <div class="years-wrap">
         <table class="years">
-          <thead><tr><th>Année</th><th>Évolution des ventes</th><th>Écart d'EBE de l'année</th><th>Cumul, investissement déduit</th></tr></thead>
+          <thead><tr><th>Année</th><th>Évolution des ventes</th><th>Redevance + cotisation</th><th>Écart d'EBE de l'année</th><th>Cumul, investissement déduit</th></tr></thead>
           <tbody id="years-body"></tbody>
         </table>
       </div>
@@ -573,7 +598,7 @@ const $ = id => document.getElementById(id);
 const UNITS = {
   ca:'€', charges:'€', volmont:'unités', volverre:'paires', autres:'%', mkt:'€', logiciel:'€',
   pmi:'€', pmf:'€', pvi:'€', pvf:'€',
-  redevance:'%', cotis:'%', mktpart:'%', logf:'€', pvm:'%', stock:'€',
+  redevance:'%', cotis:'%', red1:'%', cot1:'%', red2:'%', cot2:'%', red3:'%', cot3:'%', mktpart:'%', logf:'€', pvm:'%', stock:'€',
   droit:'€', travaux:'€', stockinit:'€', dip:'%'
 };
 const vals = {};
@@ -623,13 +648,16 @@ function getParams(){
     vm: v.volmont, vv: v.volverre,
     pmi: v.pmi, pvi: v.pvi, pmf: v.pmf, pvf: v.pvf,
     red: v.redevance / 100, cotis: v.cotis / 100,
-    mktPart: v.mktpart / 100, stock: v.stock, pv: v.pvm / 100,
+    mktPart: v.mktpart / 100,
+    ry: [v.red1, v.red2, v.red3].map(x => x / 100), cy: [v.cot1, v.cot2, v.cot3].map(x => x / 100), stock: v.stock, pv: v.pvm / 100,
     invest: v.droit + v.travaux + v.stockinit, dip: v.dip
   };
 }
 
 // bPct : évolution des ventes en volume du franchisé par rapport au magasin actuel (peut être négative)
-function calc(p, bPct){
+// rates (facultatif) : {red, cotis} pour une année de montée progressive ; sinon taux plein
+function calc(p, bPct, rates){
+  const red = rates ? rates.red : p.red, cotis = rates ? rates.cotis : p.cotis;
   const g = 1 + bPct / 100;
   // Indépendant (référence, inchangé)
   const iCM = p.vm * p.pmi, iCV = p.vv * p.pvi, iAut = p.ca * p.autres;
@@ -641,7 +669,7 @@ function calc(p, bPct){
   const fCM = fVM * p.pmf, fCV = fVV * p.pvf, fAut = p.ca * g * p.autres;
   const fMarge = fCA - fCM - fCV - fAut;
   const fMkt = p.mkt * p.mktPart;
-  const fRed = fCA * (p.red + p.cotis);
+  const fRed = fCA * (red + cotis);
   const fRes = fMarge - p.charges - fMkt - p.logF - fRed - p.stock;
   return {iCM,iCV,iAut,iMarge,iRes, fCA,fVM,fVV,fCM,fCV,fAut,fMarge,fMkt,fRed,fRes};
 }
@@ -840,15 +868,16 @@ function compute(){
   // ----- Étape 6 : investissement et délai de retour -----
   $('inv-total').textContent = eur(p.invest);
   let cum = -p.invest, payback = null, rows = '';
-  rows += '<tr><td>Départ</td><td>—</td><td>—</td><td class="' + (cum < 0 ? 'neg' : 'pos') + '">' + eurSigned(cum) + '</td></tr>';
+  rows += '<tr><td>Départ</td><td>—</td><td>—</td><td>—</td><td class="' + (cum < 0 ? 'neg' : 'pos') + '">' + eurSigned(cum) + '</td></tr>';
   for (let y = 1; y <= YEARS; y++){
     const b = y === 1 ? -p.dip : (y === 2 ? bNow / 2 : bNow);
-    const d = calc(p, b).fRes - r0.iRes;
+    const rates = y <= 3 ? {red: p.ry[y-1], cotis: p.cy[y-1]} : {red: p.red, cotis: p.cotis};
+    const d = calc(p, b, rates).fRes - r0.iRes;
     const prev = cum;
     cum += d;
     if (payback === null && prev < 0 && cum >= 0) payback = (y - 1) + (-prev / d);
     if (payback === null && p.invest <= 0 && y === 1 && cum >= 0) payback = 0;
-    rows += '<tr><td>Année ' + y + '</td><td>' + pctSigned(b) + '</td>' +
+    rows += '<tr><td>Année ' + y + '</td><td>' + pctSigned(b) + '</td><td>' + pctTxt((rates.red + rates.cotis) * 100) + ' %</td>' +
             '<td class="' + (d >= 0 ? 'pos' : 'neg') + '">' + eurSigned(d) + '</td>' +
             '<td class="' + (cum >= 0 ? 'pos' : 'neg') + '">' + eurSigned(cum) + '</td></tr>';
   }
