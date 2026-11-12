@@ -584,9 +584,18 @@
           <input type="range" id="stockinit" min="0" max="80000" step="1000" value="15000">
         </div>
         <div class="field gold">
-          <label for="dip">Baisse des ventes au démarrage (lancement et année 1) <span class="value" id="v-dip"></span></label>
-          <input type="range" id="dip" min="0" max="20" step="0.5" value="5">
-          <div class="hint">Lancement et année 1 : cette baisse. Année 2 : la moitié de la hausse choisie à l'étape 4. Années suivantes : la hausse complète. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis barème.</div>
+          <label for="g0">Évolution des ventes pendant le lancement <span class="value" id="v-g0"></span></label>
+          <input type="range" id="g0" min="-20" max="30" step="0.5" value="0">
+        </div>
+        <div class="field gold">
+          <label for="g1">Évolution des ventes, année 1 <span class="value" id="v-g1"></span></label>
+          <input type="range" id="g1" min="-20" max="30" step="0.5" value="0">
+          <div class="hint">Par rapport aux ventes du magasin avant le passage (étape 1). À appuyer sur des chiffres mesurés : mêmes mois, année précédente.</div>
+        </div>
+        <div class="field gold">
+          <label for="g2">Évolution des ventes, année 2 <span class="value" id="v-g2"></span></label>
+          <input type="range" id="g2" min="-20" max="30" step="0.5" value="0">
+          <div class="hint">Années 3 et suivantes : la hausse choisie à l'étape 4. Redevance et cotisation : taux saisis à l'étape 3 pour les années 1 à 3, puis barème.</div>
         </div>
         <div class="field gold">
           <label for="duree">Durée analysée (années de redevance, après le lancement) <span class="value" id="v-duree"></span></label>
@@ -631,7 +640,7 @@ const UNITS = {
   ca:'€', charges:'€', volmont:'unités', volverre:'paires', autres:'%', mkt:'€', logiciel:'€',
   pmi:'€', pmf:'€', pvi:'€', pvf:'€',
   cotis:'%', red1:'%', cot1:'%', red2:'%', cot2:'%', red3:'%', cot3:'%', mktpart:'%', logf:'€', pvm:'%', stock:'€',
-  duree:'ans', franch:'mois', droit:'€', travaux:'€', stockinit:'€', dip:'%'
+  duree:'ans', franch:'mois', droit:'€', travaux:'€', stockinit:'€', g0:'%', g1:'%', g2:'%'
 };
 const vals = {};
 Object.keys(UNITS).forEach(id => {
@@ -644,7 +653,7 @@ Object.keys(UNITS).forEach(id => {
   wrap.className = 'entry';
   const n = document.createElement('input');
   n.type = 'number'; n.className = 'num'; n.id = 'n-' + id;
-  n.min = (id === 'dip') ? '0' : r.min; n.step = 'any'; n.value = r.value; n.inputMode = 'decimal';
+  n.min = r.min; n.step = 'any'; n.value = r.value; n.inputMode = 'decimal';
   n.setAttribute('aria-label', label.textContent.trim() + ' (saisie exacte)');
   wrap.appendChild(n);
   wrap.appendChild(document.createTextNode(UNITS[id]));
@@ -689,7 +698,7 @@ function getParams(){
     duree: Math.max(1, Math.round(v.duree)),
     mktPart: v.mktpart / 100,
     ry: [v.red1, v.red2, v.red3].map(x => x / 100), franch: Math.min(12, Math.max(0, v.franch)), cy: [v.cot1, v.cot2, v.cot3].map(x => x / 100), stock: v.stock, pv: v.pvm / 100,
-    invest: v.droit + v.travaux + v.stockinit, dip: v.dip
+    invest: v.droit + v.travaux + v.stockinit, g: [v.g0, v.g1, v.g2]
   };
 }
 
@@ -951,11 +960,11 @@ function compute(){
   }
   // Période de lancement : pas de redevance ; la date anniversaire part de la fin de cette période
   if (p.franch > 0){
-    addRow('Lancement (' + p.franch + ' mois)', -p.dip, {red: 0, cotis: p.cy[0]}, p.franch,
+    addRow('Lancement (' + p.franch + ' mois)', p.g[0], {red: 0, cotis: p.cy[0]}, p.franch,
            'sans redevance' + (p.cy[0] > 0 ? ' + ' + pctTxt(p.cy[0] * 100) + ' %' : ''));
   }
   for (let y = 1; y <= p.duree; y++){
-    const b = y === 1 ? -p.dip : (y === 2 ? bNow / 2 : bNow);
+    const b = y <= 2 ? p.g[y] : bNow;
     const rates = y <= 3 ? {red: p.ry[y-1], cotis: p.cy[y-1]} : null;
     addRow('Année ' + y, b, rates, 12);
   }
@@ -970,6 +979,10 @@ function compute(){
   } else {
     v6.innerHTML = '<strong>L\'investissement de passage n\'est pas remboursé sur ' + (p.franch > 0 ? p.franch + ' mois de lancement et ' : '') + p.duree + ' an' + (p.duree > 1 ? 's' : '') + ' de redevance</strong> dans ces hypothèses : le cumul reste à <strong>' + eurSigned(cum) + '</strong>. Il faut de meilleures conditions d\'achat, des frais de réseau plus bas ou une hausse des ventes mesurée sur le terrain.';
     v6.classList.add('ko');
+  }
+
+  if (Math.max(p.g[0], p.g[1], p.g[2], bNow) > 10){
+    v6.innerHTML += '<br>Au-delà de +10 % de ventes, garder les charges fixes constantes est optimiste : vérifiez qu\'il ne faut pas de temps d\'opticien en plus.';
   }
 
   drawChart(p, bNow, be);
